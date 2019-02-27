@@ -1,6 +1,6 @@
 # kaggle-pets
 
-This is the folder for PetFinder.my Adoption Prediction competition, team "BaMoOaAl"
+This is the folder for [PetFinder.my Adoption Prediction competition](https://www.kaggle.com/c/petfinder-adoption-prediction), team "BaMoOaAl"
 
 Team Components:
 - https://www.kaggle.com/alessandrosolbiati, SolbiatiAlessandro
