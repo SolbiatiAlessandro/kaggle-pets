@@ -1,0 +1,5 @@
+colors = pd.read_csv('../data/out_color.csv')
+states = pd.read_csv('../data/out_state.csv')
+train = pd.read_csv('../data/out_train.csv')
+test = pd.read_csv('../data/out_test.csv')
+sub = pd.read_csv('../data/out_submission.csv')
