@@ -9,7 +9,15 @@ Team Components:
 We will follow along [Standford CS231-n](http://cs231n.stanford.edu/) assignments and implement them here on the competition.
 
 ROADMAP:
-[] implement KNN 
-[] implement SVM
-[] implement NN
-[] implement XGBoost
+
+Models:
+- [X] implement KNN 
+- [ ] implement SVM
+- [ ] implement NN
+- [ ] implement XGBoost
+
+Framework:
+- [X] write standard PredictiveModel
+- [ ] write test
+- [ ] write benchmark/execution scripts
+- [ ] write docs with model performance and insight
