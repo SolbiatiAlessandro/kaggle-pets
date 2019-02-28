@@ -8,7 +8,9 @@ Team Components:
 
 We will follow along [Standford CS231-n](http://cs231n.stanford.edu/) assignments and implement them here on the competition.
 
-ROADMAP:
+------
+
+**ROADMAP**:
 
 Models:
 - [X] implement KNN 
