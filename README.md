@@ -21,6 +21,6 @@ Models:
 Framework:
 - [X] write standard PredictiveModel
 - [X] write test
-- [ ] write benchmark/execution scripts
+- [X] write benchmark/execution scripts ( we are using notebooks )
 - [X] write docs with model performance and insight
 - [X] add code coverage
