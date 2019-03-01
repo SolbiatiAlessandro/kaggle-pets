@@ -11,7 +11,7 @@ class PredictiveModel(object):
     KNN-classifier, example usage inside KNN.ipynb
     """
     
-    def __init__(self, name, neighbors_number=15):
+    def __init__(self, name, neighbors_number=20):
         self.name = name
         self.model = neighbors.KNeighborsClassifier(neighbors_number)
         self.predictions = None

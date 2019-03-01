@@ -3,6 +3,9 @@
 
 K-scores
 - 0.12
+- 0.13190454691363668 (k = 20)
+
+__________________________________________________________
 
 This are the ideas we had about how to improve the score
 - [x] research how KNN treats categorical features
@@ -32,3 +35,5 @@ to run coverage you can use the command, **you need to be inside this folder (/m
 pytest tests --cov=./ --cov-report html
 open htmlcov/index.html
 ```
+
+
