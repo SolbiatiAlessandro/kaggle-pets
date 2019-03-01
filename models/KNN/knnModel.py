@@ -91,7 +91,7 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
         
-    def predict(self, X, verbose):
+    def predict(self, X, verbose=False):
         """
         predict method, feature generation is inside here, data cleaning outside
         
