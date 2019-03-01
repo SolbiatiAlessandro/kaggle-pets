@@ -74,3 +74,8 @@ def test_validation():
     X, Y = getXY()
     model = PredictiveModel("KNN_run_by_pytest")
     assert model.validation(X, Y) > 0
+    assert model.validation(X, Y, method = 1) > 0
+    assert model.validation(X, Y, method = 2) > 0
+
+    # method 3 is LeaveOneOut: too costly, DEPRECATED
+    # assert model.validation(X, Y, method = 3) > 0

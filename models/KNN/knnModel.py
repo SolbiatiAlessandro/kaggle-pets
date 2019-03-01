@@ -35,31 +35,45 @@ class PredictiveModel(object):
         """
         print("{} [{}.validation] start validation method {}".format(ctime(), self.name, method))
         validation_score = 0
+
+        # based on method value we choose a model_selection splitclass
         if method == 1:
             from sklearn.model_selection import ShuffleSplit
-            # from sklearn docs example
-            # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+            splitclass = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
 
-            rs = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
-            for train_index, test_index in rs.split(X):
+        elif method == 2:
+            from sklearn.model_selection import KFold
+            splitclass = KFold(n_splits=5)
 
-                train_X, train_Y = X.loc[train_index], Y.loc[train_index]
-                validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+        elif method == 3:
+            # DEPRECATED, too costly
+            from sklearn.model_selection import LeaveOneOut
+            splitclass = LeaveOneOut()
 
-                assert train_X.shape[0] == train_Y.shape[0]
-                assert validation_X.shape[0] == validation_Y.shape[0]
 
-                self.train(train_X, train_Y)
-                predictions = self.predict(validation_X)
-                score = self.evaluate(validation_Y)
-                print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
-                validation_score += score
-            validation_score /= rs.get_n_splits(X)
+        # the following 20 lines come from sklearn docs example
+        # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+        for train_index, test_index in splitclass.split(X):
 
+            train_X, train_Y = X.loc[train_index], Y.loc[train_index]
+            validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+
+            assert train_X.shape[0] == train_Y.shape[0]
+            assert validation_X.shape[0] == validation_Y.shape[0]
+
+            self.train(train_X, train_Y)
+            predictions = self.predict(validation_X)
+            score = self.evaluate(validation_Y)
+            print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
+            validation_score += score
+
+        # the total validation score is an average of the single validation scores
+        validation_score /= splitclass.get_n_splits(X)
         self.validation_score = validation_score
-        return validation_score
+
         print("{} [{}.validation] validation score = {} ".format(ctime(), self.name, validation_score))
         print("{} [{}.validation] finished validation method {}".format(ctime(), self.name, method))
+        return validation_score
             
         
     def train(self, X, Y):
