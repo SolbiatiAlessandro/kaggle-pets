@@ -16,6 +16,51 @@ class PredictiveModel(object):
         self.model = neighbors.KNeighborsClassifier(neighbors_number)
         self.predictions = None
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
+
+    def validation(self, X, Y, method=1):
+        """
+        validation method, you can choose between different validation strategies
+
+        Args:
+            X: pandas.DataFrame, shape = (, 24)
+            Y: pandas.Series
+            method number: [1,2,3]
+
+        - 1 : Holdout (split in 2 groups) : sklearn.model_selection.ShuffleSplit
+        - 2 : KFold (split in K+1 groups): sklearn.model_selection.Kfold
+        - 3 : Leave-one-out (split in len(train) groups) : sklearn.model_selection.LeaveOneOut
+
+        NOTE:
+        https://www.youtube.com/watch?v=pA6uXzrDSUs&index=23&list=PLpQWTe-45nxL3bhyAJMEs90KF_gZmuqtm
+        """
+        print("{} [{}.validation] start validation method {}".format(ctime(), self.name, method))
+        validation_score = 0
+        if method == 1:
+            from sklearn.model_selection import ShuffleSplit
+            # from sklearn docs example
+            # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+
+            rs = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
+            for train_index, test_index in rs.split(X):
+
+                train_X, train_Y = X.loc[train_index], Y.loc[train_index]
+                validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+
+                assert train_X.shape[0] == train_Y.shape[0]
+                assert validation_X.shape[0] == validation_Y.shape[0]
+
+                self.train(train_X, train_Y)
+                predictions = self.predict(validation_X)
+                score = self.evaluate(validation_Y)
+                print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
+                validation_score += score
+            validation_score /= rs.get_n_splits(X)
+
+        self.validation_score = validation_score
+        return validation_score
+        print("{} [{}.validation] validation score = {} ".format(ctime(), self.name, validation_score))
+        print("{} [{}.validation] finished validation method {}".format(ctime(), self.name, method))
+            
         
     def train(self, X, Y):
         """
@@ -45,9 +90,7 @@ class PredictiveModel(object):
             .not trained
         """
         print("{} [{}.predict] start predictions".format(ctime(), self.name))
-        if not self.model:
-            raise Exception("{} [{}.predict] ERROR model is not trained, you need to call {}.train first".format(ctime(), self.name, self.name))
-            
+
         predictions = self.model.predict(X)
         self.predictions = predictions
         
