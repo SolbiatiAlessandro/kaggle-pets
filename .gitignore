@@ -1,3 +1,6 @@
 *.csv
 *.pyc
 venv
+htmlcov
+*.swp
+.coverage*

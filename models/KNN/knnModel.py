@@ -13,9 +13,8 @@ class PredictiveModel(object):
     
     def __init__(self, name, neighbors_number=15):
         self.name = name
-        self.model = neighbors.KNeighborsClassifier(self.neighbors_number)
+        self.model = neighbors.KNeighborsClassifier(neighbors_number)
         self.predictions = None
-        self.neighbors_number = neighbors_number
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
         
     def train(self, X, Y):
