@@ -28,5 +28,7 @@ NOTE on how to run code coverage:
 pytest and coverage is installed and correctly set up
 to run coverage you can use the command
 
+```
 pytest --cov=./tests --cov-report html
 open htmlcov/index.html
+```
