@@ -13,6 +13,7 @@ This are the ideas we had about how to improve the score
 - [ ] estimate K
 
 NOTE on validation:
+====
 
 https://www.youtube.com/watch?v=pA6uXzrDSUs&index=23&list=PLpQWTe-45nxL3bhyAJMEs90KF_gZmuqtm
 - Holdout (split in 2 groups) : sklearn.model_selection.ShuffleSplit
@@ -20,3 +21,12 @@ https://www.youtube.com/watch?v=pA6uXzrDSUs&index=23&list=PLpQWTe-45nxL3bhyAJMEs
 - Leave-one-out (split in len(train) groups) : sklearn.model_selection.LeaveOneOut
 
 all this above methods are rowwise random splits, **we could also split data based on pet id**, this is a bit more complicated but we can comeback later on this if we find problem in validation.
+
+NOTE on how to run code coverage:
+====
+
+pytest and coverage is installed and correctly set up
+to run coverage you can use the command
+
+pytest --cov=./tests --cov-report html
+open htmlcov/index.html
