@@ -4,16 +4,20 @@
 K-scores
 - 0.12
 - 0.13190454691363668 (k = 20)
+- 0.09 [I dropped all categorical features, and score decreased]
+- 0.002 [I just used pairs of features]
 
 __________________________________________________________
 
 This are the ideas we had about how to improve the score
 - [x] research how KNN treats categorical features
-- [ ] select features (age, geneder, health, fee)
-- [ ] select features pairwise and draw correlation plot and visualize KNN clustering
+- [X] select features (age, geneder, health, fee)
+- [X] select features pairwise and draw correlation plot and visualize KNN clustering
 - [x] read KNN from the book "Pattern Recognition And Machine Learning, Bishop" -> 2.5.2 Nearest-neighbour methods
-- [ ] set up good cross validation
+- [X] set up good cross validation
 - [ ] estimate K
+
+looks like selecting features only decreases score, looks like there is a lot of signal in all the features (is pretty strange since most of them are mapped)
 
 NOTE on validation:
 ====
