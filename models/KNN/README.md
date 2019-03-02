@@ -24,6 +24,8 @@ looks like selecting features only decreases score, looks like there is a lot of
 - [ ] normalize input features **easy**
 - [ ] dimensionality reduction PCA
 
+if we wanted to really work on the KNN we could think of designing some distance function that takes into account the mapping, for instance betweens similar colors and between similar breeds. This might be useful later, we can think about distance functions.
+
 NOTE on validation:
 ====
 
