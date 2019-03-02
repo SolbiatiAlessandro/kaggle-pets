@@ -15,9 +15,14 @@ This are the ideas we had about how to improve the score
 - [X] select features pairwise and draw correlation plot and visualize KNN clustering
 - [x] read KNN from the book "Pattern Recognition And Machine Learning, Bishop" -> 2.5.2 Nearest-neighbour methods
 - [X] set up good cross validation
-- [ ] estimate K
 
 looks like selecting features only decreases score, looks like there is a lot of signal in all the features (is pretty strange since most of them are mapped)
+
+- [ ] estimate K (run cross validation and get best K) **easy**
+- [ ] play around with scikit paratmeters of KNN, using different distance and algoss
+- [ ] we should get some visualization tool to see how KNN is splitting
+- [ ] normalize input features **easy**
+- [ ] dimensionality reduction PCA
 
 NOTE on validation:
 ====
