@@ -27,3 +27,4 @@ FEATURES
 - FEAT #01 : (binary) the pet has a number in the name
 - FEAT #02 : (binary) the pet has a coded name (e.g. BA21)
 - FEAT #03 : (binary) is the name frequent (appeared more than 10 times?)
+- FEAT #05: is cat and is cat's age less then 5 months
