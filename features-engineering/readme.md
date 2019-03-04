@@ -18,3 +18,12 @@ IDEAS FOR NEW FEATURES
 - [ ] is all about the pictures -> size of the face (have a CNN that tells you that)
 - [ ] video length
 - [ ] brightness of the pic (or some sort of CNN that tells you how good is an image)
+
+FEATURES
+========
+
+[NAME_features]
+- FEAT #00 : (binary) the pet has a name
+- FEAT #01 : (binary) the pet has a number in the name
+- FEAT #02 : (binary) the pet has a coded name (e.g. BA21)
+- FEAT #03 : (binary) is the name frequent (appeared more than 10 times?)
