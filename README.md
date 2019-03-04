@@ -24,3 +24,13 @@ Framework:
 - [X] write benchmark/execution scripts ( we are using notebooks )
 - [X] write docs with model performance and insight
 - [X] add code coverage
+
+Exploratory Data Analysis + Feature Engineering
+- [X] Adoption Speed
+- [X] Name
+- [X] Age
+- [ ] Breed
+- [ ] Color
+- [ ] Size
+- [ ] Country
+- [ ] Images
