@@ -8,7 +8,23 @@ class PredictiveModel(object):
     """
     base class for the prediction task of Adoption Prediction competition
     
-    KNN-classifier, example usage inside KNN.ipynb
+    Naive Bayes:
+    implementation for this competition is non-trivial, we can't just use scikit API out of the box
+
+    (https://stackoverflow.com/questions/38621053/how-can-i-use-sklearn-naive-bayes-with-multiple-categorical-features)
+
+    Now consider the case where you have a dataset consisting of several features:
+
+        Categorical
+        Bernoulli
+        Normal
+    Under the very assumption of using NB, these variables are independent. Consequently, you can do the following:
+
+        Build a NB classifier for each of the categorical data separately, using your dummy variables and a multinomial NB.
+        Build a NB classifier for all of the Bernoulli data at once - this is because sklearn's - - Bernoulli NB is simply a shortcut for several single-feature Bernoulli NBs.
+        Same as 2 for all the normal features.
+
+    By the definition of independence, the probability for an instance, is the product of the probabilities of instances by these classifiers.
     """
     
     def __init__(self, name, neighbors_number=20):

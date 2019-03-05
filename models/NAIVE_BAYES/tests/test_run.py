@@ -35,10 +35,10 @@ def test_run():
     the code is just a script of 
     85f7ec7c8c0581c347a5b8034139a9ad3a6c3352:./../kNN.ipynb
     """
-    # this sys.path.append are used to import knnModel inside /models/KNN
+    # this sys.path.append are used to import naiveBayes inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from knnModel import PredictiveModel
+    from naiveBayes import PredictiveModel
 
     ###########################################################
     #### this can be used as an example usage of the model ####
@@ -66,10 +66,10 @@ def test_validation():
     """
     test cross-validation
     """
-    # this sys.path.append are used to import knnModel inside /models/KNN
+    # this sys.path.append are used to import naiveBayes inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from knnModel import PredictiveModel
+    from naiveBayes import PredictiveModel
 
     X, Y = getXY()
     model = PredictiveModel("KNN_run_by_pytest")
