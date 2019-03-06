@@ -35,10 +35,10 @@ def test_run():
     the code is just a script of 
     85f7ec7c8c0581c347a5b8034139a9ad3a6c3352:./../kNN.ipynb
     """
-    # this sys.path.append are used to import naiveBayes inside /models/KNN
+    # this sys.path.append are used to import gaussianNaiveBayes inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from naiveBayes import PredictiveModel
+    from gaussianNaiveBayes import PredictiveModel
 
     ###########################################################
     #### this can be used as an example usage of the model ####
@@ -55,7 +55,7 @@ def test_run():
     assert train_X.shape[0] == train_Y.shape[0]
     assert validation_X.shape[0] == validation_Y.shape[0]
 
-    model = PredictiveModel("KNN_run_by_pytest")
+    model = PredictiveModel("gNB_run_by_pytest")
     model.train(train_X, train_Y)
     predictions = model.predict(validation_X)
     score = model.evaluate(validation_Y)
@@ -66,10 +66,10 @@ def test_validation():
     """
     test cross-validation
     """
-    # this sys.path.append are used to import naiveBayes inside /models/KNN
+    # this sys.path.append are used to import gaussianNaiveBayes inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from naiveBayes import PredictiveModel
+    from gaussianNaiveBayes import PredictiveModel
 
     X, Y = getXY()
     model = PredictiveModel("KNN_run_by_pytest")
