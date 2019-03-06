@@ -3,6 +3,7 @@
 
 NB scores
 - gaussian NB 0.05
+- categorical on Breed1 NB 0.06
 
 __________________________________________________________
 
