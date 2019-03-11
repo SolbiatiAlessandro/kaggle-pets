@@ -64,6 +64,12 @@ def test_run():
     score = model.evaluate(validation_Y)
 
     assert score > 0 # score is less then zero means something is wrong 
+    
+    # get probabilities and assert than they are coherent with predictions
+    probabilities = model.predict(validation_X, probability=True)
+    assert probabilities is not None
+    for i, pred in enumerate(predictions):
+        assert list(probabilities[i]).index(max(probabilities[i])) == pred
 
 def test_validation():
     """

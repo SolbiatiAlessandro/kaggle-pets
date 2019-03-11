@@ -132,14 +132,16 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
         
-    def predict(self, X, verbose=False):
+    def predict(self, X, verbose=False, probability=False):
         """
         predict method, feature generation is inside here, data cleaning outside
         
         Args:
             X: pandas.DataFrame, shape = (, 24)
+            probability: look gaussianNaiveBayes.py
         Returns:
             Y: pandas.Series
+            
             
         Raise:
             .not trained
@@ -148,6 +150,7 @@ class PredictiveModel(object):
 
         dummies = self.preprocess_categorical(X, self.mapping_size)
         predictions = self.model.predict(dummies)
+        if probability: predictions = self.model.predict_proba(dummies)
         self.predictions = predictions
         
         if verbose: print("{} [{}.predict] predicted succesfully".format(ctime(), self.name))

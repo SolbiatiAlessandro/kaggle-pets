@@ -118,7 +118,9 @@ class PredictiveModel(object):
             X: pandas.DataFrame, shape = (, 24)
             probability: True to predict probability estimates for test vector X, False to predict classes
         Returns:
-            Y: pandas.Series
+            Y: pandas.Series (if probability False)
+            Y: pandas.DataFrame, shape = (, 5) a probability for every class
+            e.g. [0.05986134, 0.46925879, 0.23683668, 0.22380147, 0.01024172]
             
         Raise:
             .not trained
