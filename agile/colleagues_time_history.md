@@ -16,3 +16,14 @@ Alex:
 - DONE: implemented and run NB on our competition
 - DOING: understand why and how this competition won with NB
 - TODO: have performant model with NB in our competition
+
+
+11.03.2013
+==========
+Oana:
+- DONE: SVM
+- DOING: SOFTMAX (loss and gradient)
+
+Alex:
+- TODO: checkout SVM cross-validation notebook
+- DOING: NB
