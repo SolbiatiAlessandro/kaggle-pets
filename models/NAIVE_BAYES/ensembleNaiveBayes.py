@@ -1,12 +1,17 @@
 #model specific libraries
 from time import ctime
-from sklearn import neighbors
+from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 import numpy as np
+import pandas as pd
+from gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
+from multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
 
 class PredictiveModel(object):
     """
     base class for the prediction task of Adoption Prediction competition
+
+    this is NB ensemble
     
     Naive Bayes:
     implementation for this competition is non-trivial, we can't just use scikit API out of the box
@@ -24,21 +29,25 @@ class PredictiveModel(object):
         Build a NB classifier for all of the Bernoulli data at once - this is because sklearn's - - Bernoulli NB is simply a shortcut for several single-feature Bernoulli NBs.
         Same as 2 for all the normal features.
 
+    tina huang
+
     By the definition of independence, the probability for an instance, is the product of the probabilities of instances by these classifiers.
     """
     
-    def __init__(self, name, neighbors_number=20):
+    def __init__(self, name):
         self.name = name
-        self.model = neighbors.KNeighborsClassifier(neighbors_number)
         self.predictions = None
+        self.models = []
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
-    def validation(self, X, Y, method=1, verbose=False):
+
+    def validation(self, X, Y, mapping_sizes, method=1, verbose=False):
         """
         validation method, you can choose between different validation strategies
 
         Args:
-            X: pandas.DataFrame, shape = (, 24)
+            mapping_sizes: list(int), (for instance mapping_size of AdoptionSpeed is 5 = len([0,1,2,3,4]), mapping_size for every categorical
+            X: dataframe of (len(X.columns) - mapping_sizes) gaussian columns and (mapping_sizes) categorical columns
             Y: pandas.Series
             method number: [1,2,3]
 
@@ -77,7 +86,7 @@ class PredictiveModel(object):
             assert train_X.shape[0] == train_Y.shape[0]
             assert validation_X.shape[0] == validation_Y.shape[0]
 
-            self.train(train_X, train_Y)
+            self.train(train_X, train_Y,mapping_sizes)
             predictions = self.predict(validation_X)
             score = self.evaluate(validation_Y)
             if verbose: print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
@@ -92,36 +101,58 @@ class PredictiveModel(object):
         return validation_score
             
         
-    def train(self, X, Y, verbose=False):
+    def train(self, X, Y, mapping_sizes, verbose=False):
         """
         train method, feature generation is inside here, data cleaning outside
         
         Args:
-            X: pandas.DataFrame, shape = (, 24)
+            mapping_sizes: list(int), (for instance mapping_size of AdoptionSpeed is 5 = len([0,1,2,3,4]), mapping_size for every categorical
+            X: dataframe of (len(X.columns) - mapping_sizes) gaussian columns and (mapping_sizes) categorical columns
             Y: pandas.Series
         """
         if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
-        
-        self.model.fit(X, Y)
+
+        gaussian_feats = X.columns[:len(X.columns) - len(mapping_sizes)]
+        categorical_feats = X.columns[len(X.columns) - len(mapping_sizes):]
+        if verbose: print("{} [{}.train] training ensemble model with gaussian_feats = {}, categorical_feats = {}".format(ctime(), self.name, gaussian_feats, categorical_feats))
+
+        model = gaussianPredictiveModel("base-gaussianNB")
+        model.train(X[gaussian_feats], Y)
+        self.models.append(model)
+
+        for i, categorical_feat in enumerate(categorical_feats):
+            model = multinomialPredictiveModel("base-multinomialNB-"+categorical_feat)
+            model.train(X[categorical_feat], Y, mapping_sizes[i])
+            self.models.append(model)
+
+        if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
+
+
+
+
         
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
         
-    def predict(self, X, verbose=False):
+    def predict(self, X, verbose=False, probability=False):
         """
         predict method, feature generation is inside here, data cleaning outside
         
         Args:
             X: pandas.DataFrame, shape = (, 24)
+            probability: look gaussianNaiveBayes.py
         Returns:
             Y: pandas.Series
+            
             
         Raise:
             .not trained
         """
         if verbose: print("{} [{}.predict] start predictions".format(ctime(), self.name))
 
-        predictions = self.model.predict(X)
+        dummies = self.preprocess_categorical(X, self.mapping_size)
+        predictions = self.model.predict(dummies)
+        if probability: predictions = self.model.predict_proba(dummies)
         self.predictions = predictions
         
         if verbose: print("{} [{}.predict] predicted succesfully".format(ctime(), self.name))
