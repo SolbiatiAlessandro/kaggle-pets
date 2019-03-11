@@ -62,6 +62,9 @@ def test_run():
 
     assert score > 0 # score is less then zero means something is wrong 
 
+    predictions = model.predict(validation_X, probability=True)
+    assert predictions is not None
+
 def test_validation():
     """
     test cross-validation
