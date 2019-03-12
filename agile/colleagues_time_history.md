@@ -27,3 +27,13 @@ Oana:
 Alex:
 - TODO: checkout SVM cross-validation notebook
 - DOING: NB
+
+
+12.03.2013
+==========
+Alex:
+- DOING: unsupervised learning CS109
+- DOING: neural networks  6036
+- DONE: ensemble NB, got almost 0.1
+- TODO: NB, keep experiemnting with features
+- TODO: apply unsupervised learning concpet to distnace function
