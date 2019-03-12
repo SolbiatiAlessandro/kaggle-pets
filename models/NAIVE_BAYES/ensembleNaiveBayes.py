@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 from gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
 from multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
+from functools import reduce
+from operator import mul
 
 class PredictiveModel(object):
     """
@@ -101,7 +103,7 @@ class PredictiveModel(object):
         return validation_score
             
         
-    def train(self, X, Y, mapping_sizes, verbose=False):
+    def train(self, X, Y, mapping_sizes, verbose=True):
         """
         train method, feature generation is inside here, data cleaning outside
         
@@ -112,25 +114,21 @@ class PredictiveModel(object):
         """
         if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
 
-        gaussian_feats = X.columns[:len(X.columns) - len(mapping_sizes)]
-        categorical_feats = X.columns[len(X.columns) - len(mapping_sizes):]
-        if verbose: print("{} [{}.train] training ensemble model with gaussian_feats = {}, categorical_feats = {}".format(ctime(), self.name, gaussian_feats, categorical_feats))
+
+        self.gaussian_feats = X.columns[:len(X.columns) - len(mapping_sizes)]
+        self.categorical_feats = X.columns[len(X.columns) - len(mapping_sizes):]
+
+        if verbose: print("{} [{}.train] training ensemble model with gaussian_feats = {}, categorical_feats = {}".format(ctime(), self.name, self.gaussian_feats, self.categorical_feats))
 
         model = gaussianPredictiveModel("base-gaussianNB")
-        model.train(X[gaussian_feats], Y)
+        model.train(X[self.gaussian_feats], Y)
         self.models.append(model)
 
-        for i, categorical_feat in enumerate(categorical_feats):
+        for i, categorical_feat in enumerate(self.categorical_feats):
             model = multinomialPredictiveModel("base-multinomialNB-"+categorical_feat)
             model.train(X[categorical_feat], Y, mapping_sizes[i])
             self.models.append(model)
 
-        if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
-
-
-
-
-        
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
         
@@ -150,13 +148,20 @@ class PredictiveModel(object):
         """
         if verbose: print("{} [{}.predict] start predictions".format(ctime(), self.name))
 
-        dummies = self.preprocess_categorical(X, self.mapping_size)
-        predictions = self.model.predict(dummies)
-        if probability: predictions = self.model.predict_proba(dummies)
-        self.predictions = predictions
-        
+        self.gaussian_preds = self.models[0].predict(X[self.gaussian_feats], probability=True)
+
+        self.categorical_preds = []
+        for i, categorical_feat in enumerate(self.categorical_feats):
+            preds = self.models[i + 1].predict(X[categorical_feat], probability=True)
+            self.categorical_preds.append(preds)
+
+        if self.categorical_preds:
+            self.categorical_preds = reduce(mul, self.categorical_preds) 
+        self.predictions = self.categorical_preds * self.gaussian_preds
+        if not probability: self.predictions = np.argmax(self.predictions, axis=1)
+
         if verbose: print("{} [{}.predict] predicted succesfully".format(ctime(), self.name))
-        return predictions
+        return self.predictions
     
     def evaluate(self, labels, verbose=False):
         """
