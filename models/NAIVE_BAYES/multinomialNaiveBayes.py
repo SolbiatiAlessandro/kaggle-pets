@@ -123,7 +123,7 @@ class PredictiveModel(object):
         """
         if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
         assert isinstance(X, pd.Series) # only ONE CATEGORICAL VARIABLE for MultinomialNB 
-        if verbose: print("{} [{}.train] WARNING: {} must be one Categorical".format(ctime(), self.name, X.columns))
+        if verbose: print("{} [{}.train] WARNING: this feature must be one Categorical".format(ctime(), self.name))
 
         dummies = self.preprocess_categorical(X, mapping_size)
         self.mapping_size = mapping_size

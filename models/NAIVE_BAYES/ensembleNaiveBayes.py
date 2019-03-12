@@ -88,7 +88,7 @@ class PredictiveModel(object):
             assert train_X.shape[0] == train_Y.shape[0]
             assert validation_X.shape[0] == validation_Y.shape[0]
 
-            self.train(train_X, train_Y,mapping_sizes)
+            self.train(train_X, train_Y,mapping_sizes,verbose=verbose)
             predictions = self.predict(validation_X)
             score = self.evaluate(validation_Y)
             if verbose: print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
@@ -121,12 +121,12 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.train] training ensemble model with gaussian_feats = {}, categorical_feats = {}".format(ctime(), self.name, self.gaussian_feats, self.categorical_feats))
 
         model = gaussianPredictiveModel("base-gaussianNB")
-        model.train(X[self.gaussian_feats], Y)
+        model.train(X[self.gaussian_feats], Y, verbose=verbose)
         self.models.append(model)
 
         for i, categorical_feat in enumerate(self.categorical_feats):
             model = multinomialPredictiveModel("base-multinomialNB-"+categorical_feat)
-            model.train(X[categorical_feat], Y, mapping_sizes[i])
+            model.train(X[categorical_feat], Y, mapping_sizes[i], verbose=verbose)
             self.models.append(model)
 
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
@@ -186,7 +186,7 @@ class PredictiveModel(object):
             
         labels_array = np.array(labels)
         if not labels_array.shape == self.predictions.shape:
-            raise Exception("{} [{}.evaluate] ERROR the shape of truth value (labels) and self.predictions is different, you are giving the wrong number of labels".format(ctime(), self.name, self.name))      
+            raise Exception("{} [{}.evaluate] ERROR the shape of truth value (labels) and self.predictions is different: {} != {}, you are giving the wrong number of labels".format(ctime(), self.name, labels_array.shape, self.predictions.shape))      
             
         score = metrics.cohen_kappa_score(labels_array, self.predictions)
         
