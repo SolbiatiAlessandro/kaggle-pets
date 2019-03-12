@@ -62,6 +62,10 @@ def test_run():
 
     assert score > 0 # score is less then zero means something is wrong 
 
+    predictions = model.predict(validation_X, probability=True)
+    assert len(predictions) > 0
+    assert 1 - 1e6< sum(predictions[0]) < 1 + 1e6
+
 def test_validation():
     """
     test cross-validation

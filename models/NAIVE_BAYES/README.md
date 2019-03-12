@@ -5,7 +5,7 @@ NB scores
 - gaussian NB 0.05
 - categorical on Breed1 NB 0.06
 - extended (Gaussian + categorical) 0.087
-- ensemble only cats 0.096
+- ensemble only cats  0.10249, only dogs 0.0730
 
 __________________________________________________________
 

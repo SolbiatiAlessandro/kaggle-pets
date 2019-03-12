@@ -4,8 +4,15 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 import numpy as np
 import pandas as pd
-from gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
-from multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
+try:
+    from gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
+    from multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
+except ModuleNotFoundError:
+    import sys
+    sys.path.append("../")
+    from NAIVE_BAYES.gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
+    from NAIVE_BAYES.multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
+
 from functools import reduce
 from operator import mul
 

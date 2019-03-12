@@ -91,12 +91,13 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
         
-    def predict(self, X, verbose=False):
+    def predict(self, X, verbose=False, probability=False):
         """
         predict method, feature generation is inside here, data cleaning outside
         
         Args:
             X: pandas.DataFrame, shape = (, 24)
+            probability: (bool) predict probs
         Returns:
             Y: pandas.Series
             
@@ -105,7 +106,8 @@ class PredictiveModel(object):
         """
         if verbose: print("{} [{}.predict] start predictions".format(ctime(), self.name))
 
-        predictions = self.model.predict(X)
+        if probability: predictions = self.model.predict_proba(X)
+        else: predictions = self.model.predict(X)
         self.predictions = predictions
         
         if verbose: print("{} [{}.predict] predicted succesfully".format(ctime(), self.name))

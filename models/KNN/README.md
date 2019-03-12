@@ -6,6 +6,9 @@ K-scores
 - 0.13190454691363668 (k = 20)
 - 0.09 [I dropped all categorical features, and score decreased]
 - 0.002 [I just used pairs of features]
+- 0.135 (k=25, add photo and video)
+- 0.10 scaled
+- 0.1613 k = 100, only dogs (for cats 0.09)
 
 __________________________________________________________
 
