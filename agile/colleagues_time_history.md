@@ -37,3 +37,14 @@ Alex:
 - DONE: ensemble NB, got almost 0.1
 - TODO: NB, keep experiemnting with features
 - TODO: apply unsupervised learning concpet to distnace function
+
+
+13.03.2013
+==========
+- Alex:
+- DONE: unsupervised learning CS109
+- DOING: implement unsupervised learning in our dataset
+- DOING: neural networks  6036
+- DONE: ensemble exploration NB-KNN
+- TODO: explore differences between the tow models
+
