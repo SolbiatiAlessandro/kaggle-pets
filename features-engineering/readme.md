@@ -19,6 +19,15 @@ IDEAS FOR NEW FEATURES
 - [ ] video length
 - [ ] brightness of the pic (or some sort of CNN that tells you how good is an image)
 
+
+(one week later ideas, after having explored more the dataset)
+- encoders for breed (int mapping) -> n-dimensional vectors
+- encoders for state (int mapping) -> 2d state representation
+- similarity of pets from images 
+- knn features to be later fed into XGBoost
+- mean encoding
+- features interaction encodings
+
 FEATURES
 ========
 
