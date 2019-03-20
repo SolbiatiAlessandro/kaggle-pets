@@ -14,8 +14,9 @@ We will follow along [Standford CS231-n](http://cs231n.stanford.edu/) assignment
 
 Models:
 - [X] implement KNN 
-- [ ] implement SVM
-- [ ] implement NN
+- [X] implement NB
+- [ ] implement SVM (?)
+- [ ] implement NN (ResNet transfer learning)
 - [ ] implement XGBoost
 
 Framework:
