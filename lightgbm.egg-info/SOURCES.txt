@@ -1,0 +1,7 @@
+README.md
+lightgbm.egg-info/PKG-INFO
+lightgbm.egg-info/SOURCES.txt
+lightgbm.egg-info/dependency_links.txt
+lightgbm.egg-info/not-zip-safe
+lightgbm.egg-info/requires.txt
+lightgbm.egg-info/top_level.txt

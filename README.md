@@ -13,11 +13,11 @@ We will follow along [Standford CS231-n](http://cs231n.stanford.edu/) assignment
 **ROADMAP**:
 
 Models:
-- [X] implement KNN 
-- [X] implement NB
+- [X] KNN, best score: 0.1613
+- [X] NB, best score: 0.10249
 - [ ] implement SVM (?)
 - [ ] implement NN (ResNet transfer learning)
-- [ ] implement XGBoost
+- [X] LGBM, best score: 0.14935
 
 Framework:
 - [X] write standard PredictiveModel

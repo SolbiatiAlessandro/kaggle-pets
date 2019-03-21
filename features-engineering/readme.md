@@ -28,6 +28,11 @@ IDEAS FOR NEW FEATURES
 - mean encoding
 - features interaction encodings
 
+- encoding colors
+- clustering on breed
+- read paper
+- the (human) model is simple (?)
+
 FEATURES
 ========
 
