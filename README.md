@@ -25,7 +25,7 @@ Models:
 - [ ] implement NN (ResNet transfer learning)
 - [X] LGBM:
  best validation score: 0.14935
- public LB score:
+ public LB score: 0.278
 
 Framework:
 - [X] write standard PredictiveModel
