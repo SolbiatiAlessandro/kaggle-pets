@@ -13,11 +13,19 @@ We will follow along [Standford CS231-n](http://cs231n.stanford.edu/) assignment
 **ROADMAP**:
 
 Models:
-- [X] KNN, best score: 0.1613
-- [X] NB, best score: 0.10249
-- [ ] implement SVM (?)
+- [X] KNN:
+ best validation score: 0.1613
+ public LB score: 0.211
+- [X] NB:
+ best validation score: 0.10249
+ public LB score: 0.172
+- [ ] implement SVM:
+ best validation score:
+ public LB score:
 - [ ] implement NN (ResNet transfer learning)
-- [X] LGBM, best score: 0.14935
+- [X] LGBM:
+ best validation score: 0.14935
+ public LB score:
 
 Framework:
 - [X] write standard PredictiveModel
