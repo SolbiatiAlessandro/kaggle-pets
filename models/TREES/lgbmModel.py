@@ -26,12 +26,12 @@ class PredictiveModel(object):
                         'num_rounds':50
                         #default params for lgbm classification
                 }
-        self.train_results = None
+        self.train_results = {}
         if params is not None:
             self.params = params
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
-    def validation(self, X, Y, method=1, verbose=False):
+    def validation(self, X, Y, method=1, verbose=False, n_folds = 5):
         """
         validation method, you can choose between different validation strategies
 
@@ -53,11 +53,11 @@ class PredictiveModel(object):
         # based on method value we choose a model_selection splitclass
         if method == 1:
             from sklearn.model_selection import ShuffleSplit
-            splitclass = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
+            splitclass = ShuffleSplit(n_splits=n_folds, test_size=.25, random_state=0)
 
         elif method == 2:
             from sklearn.model_selection import KFold
-            splitclass = KFold(n_splits=5)
+            splitclass = KFold(n_splits=n_folds)
 
         elif method == 3:
             # DEPRECATED, too costly
@@ -104,6 +104,7 @@ class PredictiveModel(object):
         lgbm_train = lgbm.Dataset(X[:-split], Y[:-split])
         lgbm_validation = lgbm.Dataset(X.iloc[-split:], Y.iloc[-split:])
 
+        self.features = X.columns
         self.model = lgbm.train(
                 self.params, 
                 lgbm_train, 
@@ -138,7 +139,43 @@ class PredictiveModel(object):
         
         if verbose: print("{} [{}.predict] predicted succesfully".format(ctime(), self.name))
         return predictions
-    
+
+    def visualize(self, verbose=False):
+        """
+        if you call it from jupyter use
+        %matplotlib inline
+
+        visualize training results
+        """
+        if verbose: print("{} [{}.visualize] start visualizing".format(ctime(), self.name))
+
+        assert self.model is not None
+        assert self.features is not None
+        assert self.train_results is not None
+
+        from matplotlib import pyplot as plt
+
+        if not self.train_results:
+            print("Error: No training results available")
+        else:
+            print("printing training results..")
+            for _label, key in self.train_results.items():
+                for label, result in key.items():
+                    plt.plot(result,label=_label+" "+label)
+            plt.title("Training results")
+            plt.legend()
+            plt.show()
+
+        if not self.model:
+            print("Error: No model available")
+        else:
+            print("printing feature importance..")
+            f=lgbm.plot_importance(self.model)
+            f.figure.set_size_inches(10, 30) 
+            plt.show()
+
+        if verbose: print("{} [{}.visualzed] visualized succesfully".format(ctime(), self.name))
+
     def evaluate(self, labels, verbose=False):
         """
         evaluate predictions accuracy using competition metric "Quadratic Weighted Kappa"
