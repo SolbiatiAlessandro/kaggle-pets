@@ -27,8 +27,8 @@ Models:
  best validation score: 0.17435
  public LB score: 0.278
 - [X] CATBOOST:
- best validation score: 
- public LB score: 
+ best validation score: 0.20133
+ public LB score:  0.349
 
 Framework:
 - [X] write standard PredictiveModel
