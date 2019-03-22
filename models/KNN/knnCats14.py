@@ -17,6 +17,7 @@ class PredictiveModel(object):
         self.name = name
         self.model = neighbors.KNeighborsClassifier(neighbors_number)
         self.predictions = None
+        self.called = 0
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
     def validation(self, X, Y, method=1, verbose=False):
@@ -80,7 +81,7 @@ class PredictiveModel(object):
         return validation_score
             
         
-    def prepare_dataset(self, X):
+    def prepare_dataset(self, X, reference_scaling=False):
         """
         drop, scale and transform data
         """
@@ -94,7 +95,10 @@ class PredictiveModel(object):
         _X.drop(['Color3','Color2','State'],axis=1,inplace=True)
         # if this breaks means I am preparing two times
         for col in _X.columns:
-            _X[col] = (_X[col] - _X[col].mean()) / (_X[col].max() - _X[col].min())
+            if reference_scaling:
+                _X[col] = (_X[col] - self.means[col]) / (self.maxs[col] - self.mins[col])
+            else:
+                _X[col] = (_X[col] - _X[col].mean()) / (_X[col].max() - _X[col].min())
         _X['Sterilized'] = _X['Sterilized'] * 10
         _X['Age'] = _X['Age'] * (-90)
 
@@ -110,7 +114,18 @@ class PredictiveModel(object):
         """
         if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
         
-        if not prepared: X = self.prepare_dataset(X)
+        if not prepared:
+            #this mean is for training for submission and not for validation
+            self.means, self.maxs, self.mins = {}, {}, {}
+            for col in X.columns:
+                try:
+                    self.maxs[col] = X[col].max()
+                    self.mins[col] = X[col].min()
+                    self.means[col] = X[col].mean()
+                except:
+                    #non numeric column
+                    pass
+            X = self.prepare_dataset(X)
         self.model.fit(X, Y)
         
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
@@ -133,7 +148,14 @@ class PredictiveModel(object):
         """
         if verbose: print("{} [{}.predict] start predictions".format(ctime(), self.name))
 
-        if not prepared: X = self.prepare_dataset(X)
+        if not prepared:
+            # this is for submission not for validation
+            # and should be called only one time
+            self.called += 1
+            assert self.called == 1
+            assert self.means
+            X = self.prepare_dataset(X, reference_scaling=True)
+
         if probability: predictions = self.model.predict_proba(X)
         else: predictions = self.model.predict(X)
         self.predictions = predictions

@@ -58,16 +58,13 @@ def test_run():
     assert validation_X.shape[0] == validation_Y.shape[0]
 
     model = PredictiveModel("KNN_run_by_pytest")
-    model.train(train_X, train_Y)
-    predictions = model.predict(validation_X)
+    model.train(train_X, train_Y, verbose=True)
+    predictions = model.predict(validation_X, verbose=True)
     score = model.evaluate(validation_Y)
 
-    import pdb;pdb.set_trace() 
+    import pdb;pdb.set_trace()
     assert score > 0 # score is less then zero means something is wrong 
 
-    predictions = model.predict(validation_X, probability=True)
-    assert len(predictions) > 0
-    assert 1 - 1e6< sum(predictions[0]) < 1 + 1e6
 
 def test_validation():
     """
