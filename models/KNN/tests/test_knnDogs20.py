@@ -62,6 +62,7 @@ def test_run():
     predictions = model.predict(validation_X)
     score = model.evaluate(validation_Y)
 
+    import pdb;pdb.set_trace() 
     assert score > 0 # score is less then zero means something is wrong 
 
     predictions = model.predict(validation_X, probability=True)
