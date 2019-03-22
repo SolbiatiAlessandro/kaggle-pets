@@ -14,8 +14,8 @@ We will follow along [Standford CS231-n](http://cs231n.stanford.edu/) assignment
 
 Models:
 - [X] KNN:
- best validation score: 0.1613
- public LB score: 0.211
+ best validation score: 0.20 + 0.14
+ public LB score: 0.279 BIMODEL
 - [X] NB:
  best validation score: 0.10249
  public LB score: 0.172

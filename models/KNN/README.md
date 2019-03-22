@@ -10,6 +10,7 @@ K-scores
 - 0.10 scaled
 - 0.1613 k = 100, only dogs (for cats 0.09)
 - 0.20 DOGS standardized, 0.14 cats standardized
+- BIMODEL on LB is 0.27
 
 __________________________________________________________
 
