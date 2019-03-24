@@ -92,7 +92,13 @@ class PredictiveModel(object):
 
         if verbose: print("{} [{}.validation] start generate_meta method {}".format(ctime(), self.name, method))
 
-        meta_train = pd.Series([-1 for _ in range(len(X))])
+
+        meta_train = pd.DataFrame({'L0':[-1 for _ in range(len(X))],
+                       'L1':[-1 for _ in range(len(X))],
+                       'L2':[-1 for _ in range(len(X))],
+                       'L3':[-1 for _ in range(len(X))],
+                       'L4':[-1 for _ in range(len(X))],
+                      })
 
         if n_folds < 2: n_folds = 2
             
@@ -110,13 +116,11 @@ class PredictiveModel(object):
             assert validation_X.shape[0] == validation_Y.shape[0]
 
             self.train(train_X, train_Y, cat_features, short=short)
-            predictions = self.predict(validation_X)
+            predictions = self.predict(validation_X, probability=True)
 
             assert len(predictions) == len(test_index)
 
-            # reshaping for subsequent broadcasting into pd.Series
-            predictions = np.reshape(predictions, (len(predictions),))
-            meta_train[test_index] = predictions
+            meta_train.loc[test_index] = predictions
 
             if verbose: print("{} [{}.validation] single fold generation for meta feature completed ".format(ctime(), self.name))
 

@@ -74,6 +74,7 @@ def test_run():
     assert len(predictions) > 0
     assert 1 - 1e6< sum(predictions[0]) < 1 + 1e6
 
+#@pytest.mark.skip("passing")
 def test_validation():
     """
     test cross-validation
@@ -97,6 +98,7 @@ def test_validation():
     assert model.validation(X, Y, cat_features, method = 2, n_folds = 2) > 0
     assert model.validation(X, Y, cat_features, n_folds = 1) > 0
 
+#@pytest.mark.skip("passing")
 def test_meta():
     """
     test generate_meta, replicating validation
@@ -132,8 +134,12 @@ def test_meta():
         assert validation_X.shape[0] == validation_Y.shape[0]
 
         model.train(train_X, train_Y, cat_features, short=True)
-        predictions = model.predict(validation_X)
+        predictions = model.predict(validation_X, probability=True)
 
-        meta_vals = meta_vals.reset_index().drop('index',axis=1)[0]
+        meta_vals = meta_vals.reset_index().drop('index',axis=1)
         for i, p in enumerate(predictions):
-            assert p[0] == meta_vals[i]
+            assert p[0] == meta_vals.loc[i, 'L0']
+            assert p[1] == meta_vals.loc[i, 'L1']
+            assert p[2] == meta_vals.loc[i, 'L2']
+            assert p[3] == meta_vals.loc[i, 'L3']
+            assert p[4] == meta_vals.loc[i, 'L4']
