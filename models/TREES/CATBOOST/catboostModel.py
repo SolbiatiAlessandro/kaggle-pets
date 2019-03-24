@@ -30,12 +30,12 @@ class PredictiveModel(object):
         Args:
             X: pandas.DataFrame, shape = (, 24)
             Y: pandas.Series
-            method number: [1,2,3]
+            method number: [1,2,3] # deprecated for ensemble
             cat_features: [9,10,11] see .train docstring
+            n_folds: > 2
 
-        - 1 : Holdout (split in 2 groups) : sklearn.model_selection.ShuffleSplit
-        - 2 : KFold (split in K+1 groups): sklearn.model_selection.Kfold
-        - 3 : Leave-one-out (split in len(train) groups) : sklearn.model_selection.LeaveOneOut
+
+        always using k-fold, if n_folds is 1 it is automatically put to 2
 
         NOTE:
         https://www.youtube.com/watch?v=pA6uXzrDSUs&index=23&list=PLpQWTe-45nxL3bhyAJMEs90KF_gZmuqtm
@@ -43,20 +43,10 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.validation] start validation method {}".format(ctime(), self.name, method))
         validation_score = 0
 
-        # based on method value we choose a model_selection splitclass
-        if method == 1:
-            from sklearn.model_selection import ShuffleSplit
-            splitclass = ShuffleSplit(n_splits=n_folds, test_size=.25, random_state=0)
+        if n_folds < 2: n_folds = 2
 
-        elif method == 2:
-            from sklearn.model_selection import KFold
-            splitclass = KFold(n_splits=n_folds)
-
-        elif method == 3:
-            # DEPRECATED, too costly
-            from sklearn.model_selection import LeaveOneOut
-            splitclass = LeaveOneOut()
-
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_folds)
 
         # the following 20 lines come from sklearn docs example
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
@@ -71,6 +61,7 @@ class PredictiveModel(object):
             self.train(train_X, train_Y, cat_features, short=short)
             predictions = self.predict(validation_X)
             score = self.evaluate(validation_Y)
+
             if verbose: print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
             validation_score += score
 
@@ -80,6 +71,7 @@ class PredictiveModel(object):
 
         if verbose: print("{} [{}.validation] validation score = {} ".format(ctime(), self.name, validation_score))
         if verbose: print("{} [{}.validation] finished validation method {}".format(ctime(), self.name, method))
+
         return validation_score
             
         
