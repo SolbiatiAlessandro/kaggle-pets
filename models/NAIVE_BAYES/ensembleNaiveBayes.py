@@ -8,7 +8,7 @@ try:
     from gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
     from multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
 except ModuleNotFoundError:
-    import sys
+ sys
     sys.path.append("../")
     from NAIVE_BAYES.gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
     from NAIVE_BAYES.multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
@@ -50,7 +50,7 @@ class PredictiveModel(object):
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
 
-    def validation(self, X, Y, mapping_sizes, method=1, verbose=False):
+    def validation(self, X, Y, mapping_sizes, method=1, verbose=False, n_folds=5):
         """
         validation method, you can choose between different validation strategies
 
@@ -70,20 +70,9 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.validation] start validation method {}".format(ctime(), self.name, method))
         validation_score = 0
 
-        # based on method value we choose a model_selection splitclass
-        if method == 1:
-            from sklearn.model_selection import ShuffleSplit
-            splitclass = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
-
-        elif method == 2:
-            from sklearn.model_selection import KFold
-            splitclass = KFold(n_splits=5)
-
-        elif method == 3:
-            # DEPRECATED, too costly
-            from sklearn.model_selection import LeaveOneOut
-            splitclass = LeaveOneOut()
-
+        if n_folds < 2: n_folds = 2
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_folds)
 
         # the following 20 lines come from sklearn docs example
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
@@ -109,8 +98,61 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.validation] finished validation method {}".format(ctime(), self.name, method))
         return validation_score
             
+    def generate_meta_train(self, X, Y, mapping_sizes, verbose=False, n_folds=5, short=True):
+        """
+        generates meta features for later ensembling
+
+        args:
+            X
+            Y, is needed for in-fold training
+            mapping_sizes, see docs validation
+            FIX: even if instead of mapping_sizes I put cat_columns like in CatBOOST I get same valid score and same meat features?
+            how is this possible? mapping_sizes should be used for onehot encoding, look into this. Might be a bug in NB model
+
+        OOF k-fold
+
+        NOTE: see /ENSEMBLES/coursera.notes
+        """
+
+        if verbose: print("{} [{}.validation] start generate_meta method {}".format(ctime(), self.name, method))
+
+
+        meta_train = pd.DataFrame({'L0':[-1 for _ in range(len(X))],
+                       'L1':[-1 for _ in range(len(X))],
+                       'L2':[-1 for _ in range(len(X))],
+                       'L3':[-1 for _ in range(len(X))],
+                       'L4':[-1 for _ in range(len(X))],
+                      })
+
+        if n_folds < 2: n_folds = 2
+            
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_folds)
+
+        # the following 20 lines come from sklearn docs example
+        # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+        for train_index, test_index in splitclass.split(X):
+
+            train_X, train_Y = X.loc[train_index], Y.loc[train_index]
+            validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+
+            assert train_X.shape[0] == train_Y.shape[0]
+            assert validation_X.shape[0] == validation_Y.shape[0]
+
+            self.train(train_X, train_Y, mapping_sizes, short=short)
+            predictions = self.predict(validation_X, probability=True)
+
+            assert len(predictions) == len(test_index)
+
+            meta_train.loc[test_index] = predictions
+
+            if verbose: print("{} [{}.validation] single fold generation for meta feature completed ".format(ctime(), self.name))
+
+        if verbose: print("{} [{}.validation] finished meta-feat generation ".format(ctime(), self.name))
+
+        return meta_train
         
-    def train(self, X, Y, mapping_sizes, verbose=True):
+    def train(self, X, Y, mapping_sizes, verbose=True, short=False):
         """
         train method, feature generation is inside here, data cleaning outside
         
@@ -118,6 +160,7 @@ class PredictiveModel(object):
             mapping_sizes: list(int), (for instance mapping_size of AdoptionSpeed is 5 = len([0,1,2,3,4]), mapping_size for every categorical
             X: dataframe of (len(X.columns) - mapping_sizes) gaussian columns and (mapping_sizes) categorical columns
             Y: pandas.Series
+            short: not implemented
         """
         if verbose: print("{} [{}.train] start training".format(ctime(), self.name))
 
