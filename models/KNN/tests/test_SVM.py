@@ -38,7 +38,7 @@ def test_run():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from knnModel import PredictiveModel
+    from SVMModel import PredictiveModel
     
     ###########################################################
     #### this can be used as an example usage of the model ####
@@ -55,7 +55,7 @@ def test_run():
     assert train_X.shape[0] == train_Y.shape[0]
     assert validation_X.shape[0] == validation_Y.shape[0]
 
-    model = PredictiveModel("KNN_run_by_pytest")
+    model = PredictiveModel("SVM_run_by_pytest")
     model.train(train_X, train_Y)
     predictions = model.predict(validation_X)
     score = model.evaluate(validation_Y)
@@ -73,7 +73,7 @@ def test_validation():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from knnModel import PredictiveModel
+    from SVMModel import PredictiveModel
 
     X, Y = getXY()
     model = PredictiveModel("KNN_run_by_pytest")
