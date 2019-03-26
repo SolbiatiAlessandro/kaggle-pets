@@ -124,6 +124,21 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.validation] finished meta-feat generation ".format(ctime(), self.name))
 
         return meta_train
+
+    def generate_meta_test(self, X, Y, X_test, verbose=False, short=True):
+        """
+        generate meta_test feats
+        same signature as generate_meta_train
+        """
+        if verbose: print("{} [{}.train] start generate_meta_test".format(ctime(), self.name))
+
+        self.train(X, Y, verbose=verbose, prepared=False)
+        meta_test = self.predict(X_test, probability=True, verbose=verbose, prepared=False)
+
+        meta_test = pd.DataFrame(meta_test, columns=['L0','L1','L2','L3','L4'])
+
+        if verbose: print("{} [{}.validation] finished meta-test generation ".format(ctime(), self.name))
+        return meta_test
         
     def prepare_dataset(self, X, reference_scaling=False):
         """

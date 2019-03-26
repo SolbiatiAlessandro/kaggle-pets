@@ -4,7 +4,7 @@ import numpy as np
 import os
 import sys
 
-def getXY():
+def getXY(X_test=False):
     """helper to get X, Y
     
     loads data from local /data folder and add basic cleaning
@@ -26,6 +26,11 @@ def getXY():
     Y = dogs['AdoptionSpeed'].reset_index().drop('index',axis=1)['AdoptionSpeed']
 
     assert X.shape[0] == Y.shape[0]
+
+    if X_test:
+        cats = test[test['Type'] == 2].drop('Type',axis=1)
+        X = dogs.reset_index().drop('index',axis=1)
+        return X
     
     return X, Y
 
@@ -128,10 +133,9 @@ def test_meta():
             assert p[3] == meta_vals.loc[i, 'L3']
             assert p[4] == meta_vals.loc[i, 'L4']
 
-    """
+    X,Y = getXY()
     X_test = getXY(X_test=True)
-    X_test = pd.concat([X_test[numerical_col], X_test[categorical_col]], axis=1) 
-    meta_test = model.generate_meta_test(X, Y, cat_features, X_test)
+    model = PredictiveModel("fixed") 
+    meta_test = model.generate_meta_test(X, Y, X_test)
     assert len(meta_test.columns) == 5
     assert len(meta_test) == len(X_test)
-    """
