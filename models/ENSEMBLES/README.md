@@ -1,29 +1,13 @@
-#KNN
+#ENSEMBLES
 ====
 
 ENSEMBLE SCORE 
 
 - catboost non ensemble 0.201
 - catboost + NB 0.206
+- BI - catboost + NB, dogs = 0.2158, 0.16821
 
 __________________________________________________________
-
-This are the ideas we had about how to improve the score
-- [x] research how KNN treats categorical features
-- [X] select features (age, geneder, health, fee)
-- [X] select features pairwise and draw correlation plot and visualize KNN clustering
-- [x] read KNN from the book "Pattern Recognition And Machine Learning, Bishop" -> 2.5.2 Nearest-neighbour methods
-- [X] set up good cross validation
-
-looks like selecting features only decreases score, looks like there is a lot of signal in all the features (is pretty strange since most of them are mapped)
-
-- [ ] estimate K (run cross validation and get best K) **easy**
-- [ ] play around with scikit paratmeters of KNN, using different distance and algoss
-- [ ] we should get some visualization tool to see how KNN is splitting
-- [ ] normalize input features **easy**
-- [ ] dimensionality reduction PCA
-
-if we wanted to really work on the KNN we could think of designing some distance function that takes into account the mapping, for instance betweens similar colors and between similar breeds. This might be useful later, we can think about distance functions.
 
 NOTE on validation:
 ====
