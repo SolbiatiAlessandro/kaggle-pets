@@ -62,7 +62,6 @@ def test_run():
     predictions = model.predict(validation_X, verbose=True)
     score = model.evaluate(validation_Y)
 
-    import pdb;pdb.set_trace()
     assert score > 0 # score is less then zero means something is wrong 
 
 
@@ -85,3 +84,54 @@ def test_validation():
 
     # method 3 is LeaveOneOut: too costly, DEPRECATED
     # assert model.validation(X, Y, method = 3) > 0
+
+#@pytest.mark.skip("passing")
+def test_meta():
+    """
+    test generate_meta, replicating validation
+    """
+    # this sys.path.append are used to import knnModel inside /models/KNN
+    sys.path.append(".")
+    sys.path.append("../")
+    from knnDogs20 import PredictiveModel
+
+    X, Y = getXY()
+
+    model = PredictiveModel("knn_by_pytest_generate_meta") 
+    n_folds = 3
+    score = model.validation(X, Y, n_folds=n_folds) 
+
+    meta_train = model.generate_meta_train(X, Y, n_folds = n_folds, short=True)
+    meta_train = model.generate_meta_train(X, Y, n_folds = n_folds, short=True, verbose=True)
+
+    X = model.prepare_dataset(X)
+
+    from sklearn.model_selection import KFold
+    splitclass = KFold(n_splits=n_folds)
+    for train_index, test_index in splitclass.split(X):
+
+        meta_vals = meta_train.loc[test_index] # generated from .generate_meta
+        train_X, train_Y = X.loc[train_index], Y.loc[train_index]
+        validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+
+        assert train_X.shape[0] == train_Y.shape[0]
+        assert validation_X.shape[0] == validation_Y.shape[0]
+
+        model.train(train_X, train_Y, short=True, prepared=True)
+        predictions = model.predict(validation_X, probability=True, prepared=True)
+
+        meta_vals = meta_vals.reset_index().drop('index',axis=1)
+        for i, p in enumerate(predictions):
+            assert p[0] == meta_vals.loc[i, 'L0']
+            assert p[1] == meta_vals.loc[i, 'L1']
+            assert p[2] == meta_vals.loc[i, 'L2']
+            assert p[3] == meta_vals.loc[i, 'L3']
+            assert p[4] == meta_vals.loc[i, 'L4']
+
+    """
+    X_test = getXY(X_test=True)
+    X_test = pd.concat([X_test[numerical_col], X_test[categorical_col]], axis=1) 
+    meta_test = model.generate_meta_test(X, Y, cat_features, X_test)
+    assert len(meta_test.columns) == 5
+    assert len(meta_test) == len(X_test)
+    """

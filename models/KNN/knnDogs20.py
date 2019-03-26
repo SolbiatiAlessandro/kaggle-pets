@@ -3,6 +3,7 @@ from time import ctime
 from sklearn import neighbors
 from sklearn import metrics
 import numpy as np
+import pandas as pd
 
 class PredictiveModel(object):
     """
@@ -20,7 +21,7 @@ class PredictiveModel(object):
         self.predictions = None
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
-    def validation(self, X, Y, method=1, verbose=False):
+    def validation(self, X, Y, method=1, verbose=False, n_folds=5):
         """
         validation method, you can choose between different validation strategies
 
@@ -41,20 +42,10 @@ class PredictiveModel(object):
 
         X = self.prepare_dataset(X)
 
+        n_splits=n_folds
         # based on method value we choose a model_selection splitclass
-        if method == 1:
-            from sklearn.model_selection import ShuffleSplit
-            splitclass = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
-
-        elif method == 2:
-            from sklearn.model_selection import KFold
-            splitclass = KFold(n_splits=5)
-
-        elif method == 3:
-            # DEPRECATED, too costly
-            from sklearn.model_selection import LeaveOneOut
-            splitclass = LeaveOneOut()
-
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_splits)
 
         # the following 20 lines come from sklearn docs example
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
@@ -80,6 +71,59 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.validation] finished validation method {}".format(ctime(), self.name, method))
         return validation_score
             
+    def generate_meta_train(self, X, Y, verbose=False, n_folds=5, short=True):
+        """
+        generates meta features for later ensembling
+
+        args:
+            X
+            Y, is needed for in-fold training
+            cat_features: [9,10,11] see .train docstring
+
+        OOF k-fold
+
+        NOTE: see /ENSEMBLES/coursera.notes
+        """
+
+        if verbose: print("{} [{}.validation] start generate_meta short={}".format(ctime(), self.name, short))
+
+
+        meta_train = pd.DataFrame({'L0':[-1 for _ in range(len(X))],
+                       'L1':[-1 for _ in range(len(X))],
+                       'L2':[-1 for _ in range(len(X))],
+                       'L3':[-1 for _ in range(len(X))],
+                       'L4':[-1 for _ in range(len(X))],
+                      })
+
+        if n_folds < 2: n_folds = 2
+
+        X = self.prepare_dataset(X)
+            
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_folds)
+
+        # the following 20 lines come from sklearn docs example
+        # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+        for train_index, test_index in splitclass.split(X):
+
+            train_X, train_Y = X.loc[train_index], Y.loc[train_index]
+            validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+
+            assert train_X.shape[0] == train_Y.shape[0]
+            assert validation_X.shape[0] == validation_Y.shape[0]
+
+            self.train(train_X, train_Y,verbose=verbose,prepared=True)
+            predictions = self.predict(validation_X, probability=True,verbose=verbose, prepared=True)
+
+            assert len(predictions) == len(test_index)
+
+            meta_train.loc[test_index] = predictions
+
+            if verbose: print("{} [{}.validation] single fold generation for meta feature completed ".format(ctime(), self.name))
+
+        if verbose: print("{} [{}.validation] finished meta-feat generation ".format(ctime(), self.name))
+
+        return meta_train
         
     def prepare_dataset(self, X, reference_scaling=False):
         """
@@ -109,7 +153,7 @@ class PredictiveModel(object):
 
         return _X
 
-    def train(self, X, Y, verbose=False, prepared=False):
+    def train(self, X, Y, verbose=False, prepared=False, short=False):
         """
         train method, feature generation is inside here, data cleaning outside
         

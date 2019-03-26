@@ -80,6 +80,59 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.validation] finished validation method {}".format(ctime(), self.name, method))
         return validation_score
             
+    def generate_meta_train(self, X, Y, verbose=False, n_folds=5, short=True):
+        """
+        generates meta features for later ensembling
+
+        args:
+            X
+            Y, is needed for in-fold training
+            cat_features: [9,10,11] see .train docstring
+
+        OOF k-fold
+
+        NOTE: see /ENSEMBLES/coursera.notes
+        """
+
+        if verbose: print("{} [{}.validation] start generate_meta short={}".format(ctime(), self.name, short))
+
+
+        meta_train = pd.DataFrame({'L0':[-1 for _ in range(len(X))],
+                       'L1':[-1 for _ in range(len(X))],
+                       'L2':[-1 for _ in range(len(X))],
+                       'L3':[-1 for _ in range(len(X))],
+                       'L4':[-1 for _ in range(len(X))],
+                      })
+
+        if n_folds < 2: n_folds = 2
+
+        X = self.prepare_dataset(X)
+            
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_folds)
+
+        # the following 20 lines come from sklearn docs example
+        # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+        for train_index, test_index in splitclass.split(X):
+
+            train_X, train_Y = X.loc[train_index], Y.loc[train_index]
+            validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
+
+            assert train_X.shape[0] == train_Y.shape[0]
+            assert validation_X.shape[0] == validation_Y.shape[0]
+
+            self.train(train_X, train_Y,verbose=verbose,prepared=True)
+            predictions = self.predict(validation_X, probability=True,verbose=verbose, prepared=True)
+
+            assert len(predictions) == len(test_index)
+
+            meta_train.loc[test_index] = predictions
+
+            if verbose: print("{} [{}.validation] single fold generation for meta feature completed ".format(ctime(), self.name))
+
+        if verbose: print("{} [{}.validation] finished meta-feat generation ".format(ctime(), self.name))
+
+        return meta_train
         
     def prepare_dataset(self, X, reference_scaling=False):
         """
