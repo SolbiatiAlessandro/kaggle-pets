@@ -114,7 +114,7 @@ class PredictiveModel(object):
         NOTE: see /ENSEMBLES/coursera.notes
         """
 
-        if verbose: print("{} [{}.validation] start generate_meta method {}".format(ctime(), self.name, method))
+        if verbose: print("{} [{}.validation] start generate_meta mapping_sizes {}".format(ctime(), self.name, mapping_sizes))
 
 
         meta_train = pd.DataFrame({'L0':[-1 for _ in range(len(X))],
