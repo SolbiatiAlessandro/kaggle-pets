@@ -8,7 +8,7 @@ try:
     from gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
     from multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
 except ModuleNotFoundError:
- sys
+    import sys
     sys.path.append("../")
     from NAIVE_BAYES.gaussianNaiveBayes import PredictiveModel as gaussianPredictiveModel
     from NAIVE_BAYES.multinomialNaiveBayes import PredictiveModel as multinomialPredictiveModel
@@ -152,6 +152,21 @@ class PredictiveModel(object):
 
         return meta_train
         
+    def generate_meta_test(self, X, Y, mapping_sizes, X_test, verbose=False, short=True):
+        """
+        generate meta_test feats
+        same signature as generate_meta_train
+        """
+        if verbose: print("{} [{}.train] start generate_meta_test".format(ctime(), self.name))
+
+        self.train(X, Y, mapping_sizes, short=short, verbose=verbose)
+        meta_test = self.predict(X_test, probability=True, verbose=verbose)
+
+        meta_test = pd.DataFrame(meta_test, columns=['L0','L1','L2','L3','L4'])
+
+        if verbose: print("{} [{}.validation] finished meta-test generation ".format(ctime(), self.name))
+        return meta_test
+
     def train(self, X, Y, mapping_sizes, verbose=True, short=False):
         """
         train method, feature generation is inside here, data cleaning outside

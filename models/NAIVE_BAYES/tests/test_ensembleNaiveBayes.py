@@ -4,7 +4,31 @@ import numpy as np
 import os
 import sys
 
-def getXY():
+def getXY(X_test=False):
+    """helper to get X, Y
+    
+    loads data from local /data folder and add basic cleaning
+    """
+    # this is run from /models/KNN from pytest so the the path is correct
+    os.listdir('../../data')
+    assert 'out_breed.csv' in os.listdir('../../data') # this assert breaks if the data is configured uncorrectly
+
+    breeds = pd.read_csv('../../data/out_breed.csv')
+    colors = pd.read_csv('../../data/out_color.csv')
+    states = pd.read_csv('../../data/out_state.csv')
+    train  = pd.read_csv('../../data/out_train.csv')
+    test   = pd.read_csv('../../data/out_test.csv')
+    sub    = pd.read_csv('../../data/out_submission.csv')
+
+    X = train.drop(["AdoptionSpeed", "Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PhotoAmt","VideoAmt","PetID"], axis=1)
+    Y = train['AdoptionSpeed']
+
+    assert X.shape[0] == Y.shape[0]
+    
+    if X_test:
+        X = test.drop(["Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PhotoAmt","VideoAmt","PetID"], axis=1)
+        return X
+    return X, Y
     """helper to get X, Y
     
     loads data from local /data folder and add basic cleaning
@@ -165,3 +189,10 @@ def test_meta():
             assert p[2] == meta_vals.loc[i, 'L2']
             assert p[3] == meta_vals.loc[i, 'L3']
             assert p[4] == meta_vals.loc[i, 'L4']
+
+
+    X_test = getXY(X_test=True)
+    X_test = pd.concat([X_test[numerical_col], X_test[categorical_col]], axis=1) 
+    meta_test = model.generate_meta_test(X, Y, cat_features, X_test)
+    assert len(meta_test.columns) == 5
+    assert len(meta_test) == len(X_test)
