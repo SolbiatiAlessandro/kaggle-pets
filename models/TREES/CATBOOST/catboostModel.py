@@ -22,6 +22,8 @@ class PredictiveModel(object):
         self.train_results = {}
         if params is not None:
             self.params = params
+        else:
+            self.params = None
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
     def validation(self, X, Y, cat_features, method=1, verbose=False, n_folds = 5, short=True):
@@ -162,6 +164,8 @@ class PredictiveModel(object):
         self.features = X.columns
 
         iterations = 500 if not short else 10
+        if self.params and self.params.get('iterations') is not None:
+            iterations = self.params['iterations']
         self.model = CatBoostClassifier(
                     iterations=iterations,
                     random_seed=63,
