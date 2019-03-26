@@ -3,6 +3,7 @@ from time import ctime
 from sklearn import neighbors
 from sklearn import metrics
 import numpy as np
+import pandas as pd
 
 class PredictiveModel(object):
     """
@@ -20,7 +21,7 @@ class PredictiveModel(object):
         self.called = 0
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
-    def validation(self, X, Y, method=1, verbose=False):
+    def validation(self, X, Y, method=1, verbose=False, n_folds=5, short=False):
         """
         validation method, you can choose between different validation strategies
 
@@ -41,20 +42,8 @@ class PredictiveModel(object):
 
         X = self.prepare_dataset(X)
 
-        # based on method value we choose a model_selection splitclass
-        if method == 1:
-            from sklearn.model_selection import ShuffleSplit
-            splitclass = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
-
-        elif method == 2:
-            from sklearn.model_selection import KFold
-            splitclass = KFold(n_splits=5)
-
-        elif method == 3:
-            # DEPRECATED, too costly
-            from sklearn.model_selection import LeaveOneOut
-            splitclass = LeaveOneOut()
-
+        from sklearn.model_selection import KFold
+        splitclass = KFold(n_splits=n_folds)
 
         # the following 20 lines come from sklearn docs example
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
@@ -157,7 +146,7 @@ class PredictiveModel(object):
 
         return _X
 
-    def train(self, X, Y, verbose=False, prepared=False):
+    def train(self, X, Y, verbose=False, prepared=False, short=False):
         """
         train method, feature generation is inside here, data cleaning outside
         

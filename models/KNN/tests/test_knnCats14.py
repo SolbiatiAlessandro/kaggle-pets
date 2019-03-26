@@ -95,7 +95,7 @@ def test_meta():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from knnDogs20 import PredictiveModel
+    from knnCats14 import PredictiveModel
 
     X, Y = getXY()
 
