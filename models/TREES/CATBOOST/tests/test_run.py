@@ -4,7 +4,7 @@ import numpy as np
 import os
 import sys
 
-def getXY():
+def getXY(X_test=False):
     """helper to get X, Y
     
     loads data from local /data folder and add basic cleaning
@@ -25,6 +25,9 @@ def getXY():
 
     assert X.shape[0] == Y.shape[0]
     
+    if X_test:
+        X = test.drop(["Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PhotoAmt","VideoAmt","PetID"], axis=1)
+        return X
     return X, Y
 
 #@pytest.mark.skip("passing")
@@ -121,6 +124,7 @@ def test_meta():
     score = model.validation(X, Y, cat_features, n_folds=n_folds) 
 
     meta_train = model.generate_meta_train(X, Y, cat_features, n_folds = n_folds, short=True)
+    meta_train = model.generate_meta_train(X, Y, cat_features, n_folds = n_folds, short=True, verbose=True)
 
     from sklearn.model_selection import KFold
     splitclass = KFold(n_splits=n_folds)
@@ -143,3 +147,9 @@ def test_meta():
             assert p[2] == meta_vals.loc[i, 'L2']
             assert p[3] == meta_vals.loc[i, 'L3']
             assert p[4] == meta_vals.loc[i, 'L4']
+
+    X_test = getXY(X_test=True)
+    X_test = pd.concat([X_test[numerical_col], X_test[categorical_col]], axis=1) 
+    meta_test = model.generate_meta_test(X, Y, cat_features, X_test)
+    assert len(meta_test.columns) == 5
+    assert len(meta_test) == len(X_test)

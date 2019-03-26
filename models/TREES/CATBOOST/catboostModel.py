@@ -90,7 +90,7 @@ class PredictiveModel(object):
         NOTE: see /ENSEMBLES/coursera.notes
         """
 
-        if verbose: print("{} [{}.validation] start generate_meta method {}".format(ctime(), self.name, method))
+        if verbose: print("{} [{}.validation] start generate_meta short={}".format(ctime(), self.name, short))
 
 
         meta_train = pd.DataFrame({'L0':[-1 for _ in range(len(X))],
@@ -115,8 +115,8 @@ class PredictiveModel(object):
             assert train_X.shape[0] == train_Y.shape[0]
             assert validation_X.shape[0] == validation_Y.shape[0]
 
-            self.train(train_X, train_Y, cat_features, short=short)
-            predictions = self.predict(validation_X, probability=True)
+            self.train(train_X, train_Y, cat_features, short=short,verbose=verbose)
+            predictions = self.predict(validation_X, probability=True,verbose=verbose)
 
             assert len(predictions) == len(test_index)
 
@@ -128,6 +128,21 @@ class PredictiveModel(object):
 
         return meta_train
         
+    def generate_meta_test(self, X, Y, cat_features, X_test, verbose=False, short=True):
+        """
+        generate meta_test feats
+        same signature as generate_meta_train
+        """
+        if verbose: print("{} [{}.train] start generate_meta_test".format(ctime(), self.name))
+
+        self.train(X, Y, cat_features, short=short, verbose=verbose)
+        meta_test = self.predict(X_test, probability=True, verbose=verbose)
+
+        meta_test = pd.DataFrame(meta_test, columns=['L0','L1','L2','L3','L4'])
+
+        if verbose: print("{} [{}.validation] finished meta-test generation ".format(ctime(), self.name))
+        return meta_test
+
     def train(self, X, Y, cat_features, verbose=False, split_len=0.8, short=True):
         """
         train method, feature generation is inside here, data cleaning outside
