@@ -1,0 +1,11 @@
+#catboost + NB
+meta_train = catboost_meta_train.join(nb_meta_train, lsuffix='catboost', rsuffix='nb')
+# + KNN
+meta_train = meta_train.join(knn_meta_train, rsuffix='knn')
+meta_train.rename(columns={'L0':'L0knn','L1':'L1knn','L2':'L2knn','L3':'L3knn','L4':'L4knn'},inplace=True)
+
+#catboost + NB
+meta_test = catboost_meta_test.join(nb_meta_test, lsuffix='catboost', rsuffix='nb')
+# + KNN
+meta_test = meta_test.join(knn_meta_test, rsuffix='knn')
+meta_test.rename(columns={'L0':'L0knn','L1':'L1knn','L2':'L2knn','L3':'L3knn','L4':'L4knn'},inplace=True)}}

@@ -2,10 +2,12 @@
 ====
 
 ENSEMBLE SCORE 
-
-- catboost non ensemble 0.201
+(public LB in parenthesis)
+- catboost non ensemble 0.201 (0.349)
 - catboost + NB 0.206
-- BI - catboost + NB, dogs = 0.2158, 0.16821
+- BI - catboost + NB, dogs = 0.2158, cats = 0.16821, average = 0.1920
+- BI - catboost + NB + knn, dogs = 0.2206, cats = 0.177, average = 0.19879 (0.343)
+- catboost + NB + knn (cats14) 0.20912 (0.342)
 
 __________________________________________________________
 
