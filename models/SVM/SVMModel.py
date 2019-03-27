@@ -2,6 +2,8 @@
 from time import ctime
 from sklearn.svm import SVC
 from sklearn import metrics
+
+
 import numpy as np
 
 class PredictiveModel(object):
@@ -11,9 +13,9 @@ class PredictiveModel(object):
     KNN-classifier, example usage inside KNN.ipynb
     """
     
-    def __init__(self, name, neighbors_number=20):
+    def __init__(self, name):
         self.name = name
-        self.model = SVC(kernel='linear')
+        self.model = SVC()
         self.predictions = None
         print("{} [{}.__init__] initialized succesfully".format(ctime(), self.name))
 
