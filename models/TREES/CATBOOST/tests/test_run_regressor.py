@@ -68,8 +68,9 @@ def test_run():
 
     model = PredictiveModel("catboost_by_pytest")
     model.train(train_X, train_Y, cat_features)
+    
     predictions = model.predict(validation_X)
-
+    labels_predictions = model.meta_predict(train_X,train_Y,validation_X,cat_features)
     score = model.evaluate(validation_Y)
 
     assert score > 0 # score is less then zero means something is wrong 
@@ -102,7 +103,7 @@ def test_validation():
     assert model.validation(X, Y, cat_features, method = 2, n_folds = 2) > 0
     assert model.validation(X, Y, cat_features, n_folds = 1) > 0
 
-#@pytest.mark.skip("passing")
+@pytest.mark.skip("passing")
 def test_generate_meta_train():
     """
     DEPRECATED
@@ -179,7 +180,6 @@ def test_generate_meta_train_test():
     X_test = pd.concat([X_test[numerical_col], X_test[categorical_col]], axis=1) 
     model = PredictiveModel("catboost_by_pytest_generate_meta") 
     n_folds = 3
-    score = model.validation(X, Y, cat_features, n_folds=n_folds) 
 
     # call generate_meta
     meta_train, meta_test = model.generate_meta(X, Y, X_test, cat_features, n_folds = n_folds, short=True)

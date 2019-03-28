@@ -62,8 +62,11 @@ class PredictiveModel(object):
             assert train_X.shape[0] == train_Y.shape[0]
             assert validation_X.shape[0] == validation_Y.shape[0]
 
-            self.train(train_X, train_Y, cat_features, short=short)
-            predictions = self.predict(validation_X)
+            train_X.reset_index(drop=True,inplace=True)
+            train_Y.reset_index(drop=True,inplace=True)
+            validation_X.reset_index(drop=True,inplace=True)
+            validation_Y.reset_index(drop=True,inplace=True)
+            self.meta_predict(train_X,train_Y,validation_X,cat_features,short=short)
             score = self.evaluate(validation_Y)
 
             if verbose: print("{} [{}.validation] single score = {} ".format(ctime(), self.name, score))
@@ -166,7 +169,7 @@ class PredictiveModel(object):
 
         if n_folds < 2: n_folds = 2
 
-        meta_train = pd.DataFrame({'{}_regressor'.format(self.name):[-1 for _ in range(len(X))] })
+        meta_train =pd.DataFrame({'{}_regressor'.format(self.name):[-1 for _ in range(len(X))] })
         meta_test = np.zeros((X_test.shape[0], n_folds))
 
         from sklearn.model_selection import KFold
@@ -194,9 +197,12 @@ class PredictiveModel(object):
 
             if verbose: print("{} [{}.validation] single fold generation for meta feature completed ".format(ctime(), self.name))
 
+        # here the meta-predictions get averaged
+        meta_test = meta_test.mean(axis=1) 
+
         if verbose: print("{} [{}.validation] finished meta-feat generation ".format(ctime(), self.name))
 
-        return meta_train, meta_test.mean(axis=1)
+        return meta_train, meta_test
 
     def train(self, X, Y, cat_features, verbose=False, split_len=0.8, short=True):
         """
@@ -234,14 +240,6 @@ class PredictiveModel(object):
             plot=True
         )
 
-        #fitting optimizer
-        import sys
-        sys.path.append("../../")
-        from rounder import OptimizedRounder
-        self.rounder = OptimizedRounder()
-        self.rounder.fit(self.model.predict(X), Y)
-        self.coefficients = self.rounder.coefficients()
-
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
         
@@ -264,12 +262,26 @@ class PredictiveModel(object):
         if verbose: print("{} [{}.predict] start predictions".format(ctime(), self.name))
 
         predictions = self.model.predict(X)
-        if not probability:
-            predictions = self.rounder.predict(predictions, self.coefficients)
         self.predictions = predictions
         
         if verbose: print("{} [{}.predict] predicted succesfully".format(ctime(), self.name))
         return predictions
+
+    def meta_predict(self,X,Y,X_test,cat_features,verbose=False,short=True):
+        """
+        predict labels, this is the last layer of the meta model
+        """
+        meta_train, meta_test = self.generate_meta(X,Y,X_test,cat_features,verbose=verbose,short=short)
+        meta_train =  np.array(meta_train.iloc[:,0])
+
+        import sys
+        sys.path.append("../../")
+        from rounder import OptimizedRounder
+        rounder = OptimizedRounder()
+        rounder.fit(meta_train, Y)
+        coefficients = rounder.coefficients()
+        self.labels_predictions = rounder.predict(meta_test, coefficients)
+        return self.labels_predictions
 
     def visualize(self, verbose=False):
         """
@@ -305,14 +317,14 @@ class PredictiveModel(object):
         The aim is to get as close to 1 as possible. Generally a score of 0.6+ is considered to be a really good score.
         """
         if verbose: print("{} [{}.evaluate] start evaluation".format(ctime(), self.name))
-        if self.predictions is None:
+        if self.labels_predictions is None:
             raise Exception("{} [{}.evaluate] ERROR model didn't predict, you need to call {}.predict first".format(ctime(), self.name, self.name))
             
         labels_array = np.array(labels)
-        if not labels_array.shape[0] == self.predictions.shape[0]:
-            raise Exception("{} [{}.evaluate] ERROR the shape of truth value (labels) and self.predictions is different, you are giving the wrong number of labels: {}, {}".format(ctime(), self.name, labels_array.shape, self.predictions.shape))      
+        if not labels_array.shape[0] == self.labels_predictions.shape[0]:
+            raise Exception("{} [{}.evaluate] ERROR the shape of truth value (labels) and self.predictions is different, you are giving the wrong number of labels: {}, {}".format(ctime(), self.name, labels_array.shape, self.labels_predictions.shape))      
             
-        score = metrics.cohen_kappa_score(labels_array, self.predictions)
+        score = metrics.cohen_kappa_score(labels_array, self.labels_predictions)
         
         if verbose: print("{} [{}.evaluate] evaluated succesfully".format(ctime(), self.name))
         return score
