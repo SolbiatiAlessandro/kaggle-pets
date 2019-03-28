@@ -159,26 +159,35 @@ class PredictiveModel(object):
         split = int(len(X)*split_len)
         X_train, Y_train = X[:split], Y[:split]
         X_val, Y_val = X[split:], Y[split:]
-        # FIRST ALL NUMERICAL, then ALL CATEGORICAL
 
         self.features = X.columns
 
         iterations = 500 if not short else 10
         if self.params and self.params.get('iterations') is not None:
             iterations = self.params['iterations']
-        self.model = CatBoostClassifier(
+
+        if self.params and len(self.params.keys()) > 1: 
+            # this is used for grid search
+            self.model = CatBoostClassifier(**self.params,
+                    loss_function='MultiClass',
+                    use_best_model=True)
+            _plot = False
+        else:
+            self.model = CatBoostClassifier(
                     iterations=iterations,
                     random_seed=63,
                     learning_rate=0.1,
-                    loss_function='MultiClass'
+                    loss_function='MultiClass',
+                    use_best_model=True
                 )
+            _plot = True
 
         self.model.fit(
             X_train, Y_train,
             eval_set=(X_val, Y_val),
             cat_features=cat_features,
             logging_level ='Silent',
-            plot=True
+            plot=_plot
         )
 
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))

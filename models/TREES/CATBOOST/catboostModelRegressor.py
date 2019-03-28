@@ -225,19 +225,28 @@ class PredictiveModel(object):
         iterations = 500 if not short else 10
         if self.params and self.params.get('iterations') is not None:
             iterations = self.params['iterations']
-        self.model = CatBoostRegressor(
-                    iterations=iterations,
-                    random_seed=63,
-                    learning_rate=0.1,
-                    loss_function='RMSE'
-                )
+
+        if self.params and len(self.params.keys()) > 1: 
+            # this is used for grid search
+            self.model = CatBoostRegressor(**self.params,
+                    loss_function='RMSE',
+                    use_best_model=True)
+            _plot = False
+        else:
+            self.model = CatBoostRegressor(
+                        iterations=iterations,
+                        random_seed=63,
+                        learning_rate=0.1,
+                        loss_function='RMSE'
+                    )
+            _plot=True
 
         self.model.fit(
             X_train, Y_train,
             eval_set=(X_val, Y_val),
             cat_features=cat_features,
             logging_level ='Silent',
-            plot=True
+            plot=_plot
         )
 
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))

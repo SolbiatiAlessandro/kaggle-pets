@@ -103,6 +103,35 @@ def test_validation():
     assert model.validation(X, Y, cat_features, method = 2, n_folds = 2) > 0
     assert model.validation(X, Y, cat_features, n_folds = 1) > 0
 
+#@pytest.mark.skip("passing")
+def test_grid_search():
+    """
+    """
+    # this sys.path.append are used to import knnModel inside /models/KNN
+    sys.path.append(".")
+    sys.path.append("../")
+    from catboostModelRegressor import PredictiveModel
+
+    X, Y = getXY()
+    string_cols = ["Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PetID"]
+    categorical_col = ["Type","Gender","Vaccinated","Dewormed","Sterilized","Breed1","Breed2","Color1","Color2","Color3","State"]
+    numerical_col = [col for col in X.columns if col not in string_cols and col not in categorical_col and col != "AdoptionSpeed"]
+    mapping_sizes = [2, 2, 3, 3, 3, 307, 307, 7, 7, 7, 15]
+    cat_features = [i for i in range(len(numerical_col), len(numerical_col)+len(categorical_col))]
+
+    X = pd.concat([X[numerical_col], X[categorical_col]], axis=1)
+    
+    params = {'depth':3,
+              'iterations':20,
+              'learning_rate':0.5, 
+              'l2_leaf_reg':3,
+              'border_count':3,
+              'thread_count':4,
+              }
+    model = PredictiveModel("catboost_by_pytest",params)
+
+    assert model.validation(X, Y, cat_features, n_folds=2) > 0
+
 @pytest.mark.skip("passing")
 def test_generate_meta_train():
     """
