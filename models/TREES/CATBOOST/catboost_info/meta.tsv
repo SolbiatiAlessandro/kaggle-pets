@@ -3,4 +3,4 @@ iterCount	20
 learnErrorLog	learn_error.tsv
 testErrorLog	test_error.tsv
 timeLeft	time_left.tsv
-loss	RMSE	min
+loss	MultiClass	max

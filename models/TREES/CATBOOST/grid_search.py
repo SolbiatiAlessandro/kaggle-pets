@@ -9,9 +9,12 @@ def load_data():
 
 def main():
 
+    from time import ctime
     import logging
+
     logging.basicConfig(level=logging.INFO,filename="gridsearch.logs")
     logging.info("gridsearch logs")
+
     X,Y,cat_features = load_data()
 
     from catboostModel import PredictiveModel as classificationPredictiveModel
@@ -79,9 +82,9 @@ def main():
             # save the crossvalidation result so that future iterations can reuse the best parameters
             ps.register_result(res,prms)
             logging.info('\n\n')
-            logging.info(ctime(),res,prms)
+            logging.info([ctime(),res,prms])
             logging.info("--")
-            logging.info(ps.bestscore(),ps.bestparam())
+            logging.info([ps.bestscore(),ps.bestparam()])
         return ps.bestparam()
 
     classifier_bestparams = classifier_catboost_param_tune(params)
@@ -105,9 +108,9 @@ def main():
             # save the crossvalidation result so that future iterations can reuse the best parameters
             ps.register_result(res,prms)
             logging.info('\n\n')
-            logging.info(ctime(),res,prms)
+            logging.info([ctime(),res,prms])
             logging.info("--")
-            logging.info(ps.bestscore(),ps.bestparam())
+            logging.info([ps.bestscore(),ps.bestparam()])
         return ps.bestparam()
 
 
