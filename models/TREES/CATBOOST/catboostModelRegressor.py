@@ -49,12 +49,12 @@ class PredictiveModel(object):
 
         if n_folds < 2: n_folds = 2
 
-        from sklearn.model_selection import KFold
-        splitclass = KFold(n_splits=n_folds)
+        from sklearn.model_selection import StratifiedKFold
+        splitclass = StratifiedKFold(n_splits=n_folds)
 
         # the following 20 lines come from sklearn docs example
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
-        for train_index, test_index in splitclass.split(X):
+        for train_index, test_index in splitclass.split(X, Y):
 
             train_X, train_Y = X.loc[train_index], Y.loc[train_index]
             validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
@@ -172,11 +172,11 @@ class PredictiveModel(object):
         meta_train =pd.DataFrame({'{}_regressor'.format(self.name):[-1 for _ in range(len(X))] })
         meta_test = np.zeros((X_test.shape[0], n_folds))
 
-        from sklearn.model_selection import KFold
-        splitclass = KFold(n_splits=n_folds)
+        from sklearn.model_selection import StratifiedKFold
+        splitclass = StratifiedKFold(n_splits=n_folds)
 
         fold = 0
-        for train_index, test_index in splitclass.split(X):
+        for train_index, test_index in splitclass.split(X, Y):
 
             train_X, train_Y = X.loc[train_index], Y.loc[train_index]
             validation_X, validation_Y = X.loc[test_index], Y.loc[test_index]
@@ -242,7 +242,6 @@ class PredictiveModel(object):
 
         if verbose: print("{} [{}.train] trained succefully".format(ctime(), self.name))
 
-        
     def predict(self, X, verbose=False, probability=False):
         """
                 verbose_eval=verbose)

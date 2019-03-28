@@ -184,9 +184,9 @@ def test_generate_meta_train_test():
     # call generate_meta
     meta_train, meta_test = model.generate_meta(X, Y, X_test, cat_features, n_folds = n_folds, short=True)
 
-    from sklearn.model_selection import KFold
-    splitclass = KFold(n_splits=n_folds)
-    for train_index, test_index in splitclass.split(X):
+    from sklearn.model_selection import StratifiedKFold
+    splitclass = StratifiedKFold(n_splits=n_folds)
+    for train_index, test_index in splitclass.split(X,Y):
 
         meta_vals = meta_train.loc[test_index] # generated from .generate_meta
         train_X, train_Y = X.loc[train_index], Y.loc[train_index]
