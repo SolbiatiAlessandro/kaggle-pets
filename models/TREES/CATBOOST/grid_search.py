@@ -8,6 +8,10 @@ def load_data():
     return X,Y,cat_features
 
 def main():
+
+    import logging
+    logging.basicConfig(level=logging.INFO,filename="gridsearch.logs")
+    logging.info("gridsearch logs")
     X,Y,cat_features = load_data()
 
     from catboostModel import PredictiveModel as classificationPredictiveModel
@@ -23,7 +27,7 @@ def main():
     model = classificationPredictiveModel("catboost_classifier_gridsearch",params)
 
     classifier_test_score = model.validation(X, Y, cat_features, n_folds=5, verbose=True)
-    print(classifier_test_score)
+    logging.info(classifier_test_score)
     assert  classifier_test_score > 0
     # 30 secs with short True
     # 3 mins to do one fold of validation in short=False
@@ -42,7 +46,7 @@ def main():
     model = regressionPredictiveModel("catboost_regressor_gridsearch",params)
 
     regressor_test_score = model.validation(X, Y, cat_features, n_folds=5, verbose=True) 
-    print(regressor_test_score)
+    logging.info(regressor_test_score)
     assert regressor_test_score > 0
 
     # 3 mins to do one fold of validation in short=False
@@ -53,7 +57,7 @@ def main():
 
 
     params = {'depth':[3,1,2,6,4,5,7,8,9,10],
-              'iterations':[250,100,500,1000],
+              'iterations':[10,250,100,500,1000],
               'learning_rate':[0.03,0.001,0.01,0.1,0.2,0.3], 
               'l2_leaf_reg':[3,1,5,10,100],
               'border_count':[32,5,10,20,50,100,200],
@@ -74,14 +78,14 @@ def main():
             res = model.validation(X, Y, cat_features, n_folds=5, verbose=False)
             # save the crossvalidation result so that future iterations can reuse the best parameters
             ps.register_result(res,prms)
-            print('\n\n')
-            print(ctime(),res,prms)
-            print("--")
-            print(ps.bestscore(),ps.bestparam())
+            logging.info('\n\n')
+            logging.info(ctime(),res,prms)
+            logging.info("--")
+            logging.info(ps.bestscore(),ps.bestparam())
         return ps.bestparam()
 
     classifier_bestparams = classifier_catboost_param_tune(params)
-    print(classifier_bestparams)
+    logging.info(classifier_bestparams)
     import pickle as pkl
     pkl.dump(classifier_bestparams, open("classifier_bestparams.pkl","wb"))
 
@@ -100,15 +104,15 @@ def main():
             res = model.validation(X, Y, cat_features, n_folds=5, verbose=False)
             # save the crossvalidation result so that future iterations can reuse the best parameters
             ps.register_result(res,prms)
-            print('\n\n')
-            print(ctime(),res,prms)
-            print("--")
-            print(ps.bestscore(),ps.bestparam())
+            logging.info('\n\n')
+            logging.info(ctime(),res,prms)
+            logging.info("--")
+            logging.info(ps.bestscore(),ps.bestparam())
         return ps.bestparam()
 
 
     regressor_bestparams = regressor_catboost_param_tune(params)
-    print(regressor_bestparams)
+    logging.info(regressor_bestparams)
     import pickle as pkl
     pkl.dump(regressor_bestparams, open("regressor_bestparams.pkl","wb"))
 
