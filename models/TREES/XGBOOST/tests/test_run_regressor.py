@@ -41,7 +41,7 @@ def test_run():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from catboostModelRegressor import PredictiveModel
+    from xgboostModelRegressor import PredictiveModel
 
     ###########################################################
     #### this can be used as an example usage of the model ####
@@ -70,6 +70,7 @@ def test_run():
     model.train(train_X, train_Y, cat_features)
     
     predictions = model.predict(validation_X)
+    import pdb;pdb.set_trace()
     labels_predictions = model.meta_predict(train_X,train_Y,validation_X,cat_features)
     score = model.evaluate(validation_Y)
 
@@ -87,7 +88,7 @@ def test_validation():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from catboostModelRegressor import PredictiveModel
+    from xgboostModelRegressor import PredictiveModel
 
     X, Y = getXY()
     string_cols = ["Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PetID"]
@@ -112,7 +113,7 @@ def test_generate_meta_train():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from catboostModelRegressor import PredictiveModel
+    from xgboostModelRegressor import PredictiveModel
 
     X, Y = getXY()
     string_cols = ["Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PetID"]
@@ -166,7 +167,7 @@ def test_generate_meta_train_test():
     # this sys.path.append are used to import knnModel inside /models/KNN
     sys.path.append(".")
     sys.path.append("../")
-    from catboostModelRegressor import PredictiveModel
+    from xgboostModelRegressor import PredictiveModel
 
     X, Y = getXY()
     string_cols = ["Unnamed: 0", "dataset_type", "Name", "RescuerID", "Description", "PetID"]
