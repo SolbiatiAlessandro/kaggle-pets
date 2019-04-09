@@ -1,8 +1,8 @@
 PROJECT_ID=kaggle-pets
 BUCKET_ID=kaggle-pets-dataset
-REGION=us-east1
-TRAINER_PACKAGE_PATH=./gcp_training
-MAIN_TRAINER_MODULE=gcp_training.train
+REGION=US
+TRAINER_PACKAGE_PATH=./gcp_training/
+MAIN_TRAINER_MODULE=./gcp_training/train
 JOB_DIR=gs://kaggle-pets-dataset/
 RUNTIME_VERSION=1.9
 PYTHON_VERSION=3.5
