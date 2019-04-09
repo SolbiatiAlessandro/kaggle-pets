@@ -5,5 +5,5 @@ htmlcov
 *.swp
 .coverage*
 *.pkl
-.json
-.bst
+*.json
+*.bst
