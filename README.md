@@ -36,6 +36,7 @@ Framework:
 - [X] write benchmark/execution scripts ( we are using notebooks )
 - [X] write docs with model performance and insight
 - [X] add code coverage
+- *[X] write implementation for Google Cloud Machine Learning Engine to run models on cloud (inside GCP)
 
 Exploratory Data Analysis + Feature Engineering
 - [X] Adoption Speed
