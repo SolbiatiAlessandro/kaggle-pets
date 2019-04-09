@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "kaggle-pets",
+  "private_key_id": "26ce7fa96dc39c8d1c0281b4c8da8266ac5760df",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC6BkCCVDT4sG38\nz+cui59e4HxLlGPF/BbgfabCl9Dfq0EI/tdU0sUD5ESb3JF0ZnzQZgFAZysUhFQa\noZ7VgZquYDmGopyHKZ4yCa/gEJbw/VH6O8eRnLUg3Kc+sMMBiHHWU3p5qZkYyTjC\nzIMBegBUlzl2OGSTT3NaSruXnIqkeEjp0KQ6qMMzMylkSRVEwB5JRcNb2sjQDSr1\nsO2d/3NDQA9rVM5DY7g1Ar39WUm8YnMugJkFNdNQb1X5FdQqJ1iEIkKjycH0E6EO\nI5v98QnMwY/jm7ZkZfSI4J8Ku8E2xyTZU92DBYUWGzckDfX4xYXChLQkCohvGZHW\nTYSCQ0AbAgMBAAECggEAGTCBibmyAT7lazISgZiseEzOPURsYkHULd/gi0HC1Ja8\nVBCAw16rCO+JuXqbmPchIu29G6XHYpwsm1KT+ctL+8gnN1ZLpc3P5cIEC8OTUjIA\nk3GG1kPcZFpyAdODrxsfzGrkucFqbBMgrtgXS/A48pDBBNjMCFqI1IrWw3KSH4UN\nM/4fOpadzhTLO1bfafvrH8OALbgiE84J+ST/n6UgbAk6jz8VoD/mIVYgOQk3XnF5\nvN9g9DqWteuc1PW2Mg+G0aYbQ9lzdQVbeyZ9Zh9beEqEHTm9Q7sDu5v8UuLLpG+7\nD7fRn8GclrtrYq6SUX2cYPi87DN89BJoSx9sqtab0QKBgQD6a1Hux+6eFax8fbUq\nAaZbm/PRk4/ozKJcHbLAZ+E9swJA/kjgzVGPM796D3d6gtzoH8BjM6728RSjXXcR\nqTnxxZdVyFR7uP8QswF5i1OgL+QfM25gFesWU6gKpy/8fkMVscsKXjDejWbvJnCM\npy0tAPy3aCSWt1UR72gIWqGeQwKBgQC+K4y9yxms+a43RuywZg3LnA+gVx2jiq22\nDI2o6yuj93x0eedLlvhyQrDFxoz1Q8lAhopZCurKFn7+ofhYXyBb0NV/cOKnev3u\n5JnTPBnD+PIfIBH04rBir20QdusS94434iaUmJjyLkcK/r29UfF9CeLlxfkpYHmc\ne98nfX31SQKBgGhHpp/TvAcyqVhSFM4AT+FYKQk99LCR/o5zg4th9sb1s1uTSI/s\nkCkc+ICAzlVDB3DWQAxPam3E6L463qmJGesXSDTdrmizGew/Tr7piRJsvwdLKIx0\ntCfhAFonUvFHNvJizlVr8dfLdHDkRfwcZdCW16YchRgKEi/czSqlayX3AoGAKAd8\nuZqdzfZEgKgyPDNPJhO0ilisCXewdwiPbQYLipkWnmHmmNevdkWpdggENcBOBYIM\nbw/IOj+f/bNUVi233vvHZOr7Gqvd9cIyyu70sXaeaITUospwvGUWvQd7FeP8ELFO\n06qHTzsEg0D56XbtMRe6pgkVGGuRTaoZX/OfZtkCgYA/g+KYQdq/hTXhSKKaoDg7\nwfuo+cWpBZfsrS6hxVWK1mCAzpkbhWVVPBirFkUcmtGojHRqS8G2MrtnKPzYwK9m\nCqu7icVjKeoAVPhNG2T7DsOZdkAif9MNU92jPrWF/N8/XQxU7Nbk3i7/7JeqZsGI\nuLHoRGA/4QDvafakSeFM1g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "alex-410@kaggle-pets.iam.gserviceaccount.com",
+  "client_id": "105544566361552359583",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/alex-410%40kaggle-pets.iam.gserviceaccount.com"
+}

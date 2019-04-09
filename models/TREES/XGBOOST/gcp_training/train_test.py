@@ -10,10 +10,10 @@ RESULTS_FOLDER = train.RESULTS_FOLDER
 DATA_FOLDER = train.DATA_FOLDER
 download_files = train.download_files
 
-@pytest.mark.skip("passing") 
+#@pytest.mark.skip("passing") 
 def test_download_data():
     """test gcs download data"""
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./google_cloud_storage_APIs/kaggle-pets-dff39db5da9c.json"
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./google_cloud_storage_APIs/kaggle-pets-26ce7fa96dc3.json"
     os.system("rm -r "+DATA_FOLDER)
     train.download_data()
 
@@ -22,17 +22,18 @@ def test_download_data():
                 os.path.join(DATA_FOLDER, "out_"+file_name+".csv")
                 )
 
-@pytest.mark.skip("passing") 
+#@pytest.mark.skip("passing") 
 def test_read_data_locally():
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./google_cloud_storage_APIs/kaggle-pets-dff39db5da9c.json"
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./google_cloud_storage_APIs/kaggle-pets-26ce7fa96dc3.json"
     os.system("rm -r "+DATA_FOLDER)
     train.download_data()
     X, Y = train.read_data_locally()
     assert isinstance(X, pd.DataFrame)
     assert isinstance(Y, pd.Series)
 
+#@pytest.mark.skip("passing") 
 def test_run_job():
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./google_cloud_storage_APIs/kaggle-pets-dff39db5da9c.json" # this should not be needed on the cloud
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./google_cloud_storage_APIs/kaggle-pets-26ce7fa96dc3.json" # this should not be needed on the cloud
     os.system("rm -r "+DATA_FOLDER)
     os.system("rm -r "+RESULTS_FOLDER)
     train.download_data()
