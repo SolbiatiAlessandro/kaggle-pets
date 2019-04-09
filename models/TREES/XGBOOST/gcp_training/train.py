@@ -4,12 +4,35 @@ import os
 import subprocess
 import pandas as pd
 from time import ctime
+from google.cloud import storage
 
-from google_cloud_storage_APIs import APIs as gcs
+def download_blob(bucket_name, source_blob_name, destination_file_name):
+    """Downloads a blob from the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+
+    blob.download_to_filename(destination_file_name)
+
+    print('Blob {} downloaded to {}.'.format(
+        source_blob_name,
+        destination_file_name))
+
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_filename(source_file_name)
+
+    print('File {} uploaded to {}.'.format(
+        source_file_name,
+        destination_blob_name))
 
 BUCKET_NAME = "kaggle-pets-dataset"
-RESULTS_FOLDER = "./job_results"
-DATA_FOLDER = "./data"
+RESULTS_FOLDER = "job_results"
+DATA_FOLDER = "data"
 download_files = ["breed","color","state","train","test","submission"]
 
 def download_data():
@@ -19,7 +42,7 @@ def download_data():
     """
     os.system("mkdir -p "+DATA_FOLDER)
     for file_name in download_files:
-        gcs.download_blob(BUCKET_NAME,
+        download_blob(BUCKET_NAME,
                     "out_"+file_name+".csv",
                     os.path.join(DATA_FOLDER, "out_"+file_name+".csv")
                 )
@@ -60,7 +83,7 @@ def run_model(name=None, short=True):
     ./<name>.bst : xgboost model
     ./<name>.score : validation score
     """
-    from xgboostModelRegressor import PredictiveModel
+    from gcp_training.xgboostModelRegressor import PredictiveModel
 
     # [START DATA PROCESSING]
     X, Y = read_data_locally()
@@ -93,8 +116,8 @@ def upload_results(name=None):
     """
     os.system("mkdir -p "+RESULTS_FOLDER)
     name = "CMLE_xgboost_regressor" if name is None else name
-    gcs.upload_blob(BUCKET_NAME, os.path.join(RESULTS_FOLDER, name+".bst"), os.path.join(RESULTS_FOLDER, name+".bst"))
-    gcs.upload_blob(BUCKET_NAME, os.path.join(RESULTS_FOLDER, name+".score"), os.path.join(RESULTS_FOLDER, name+".score"))
+    upload_blob(BUCKET_NAME, os.path.join(RESULTS_FOLDER, name+".bst"), os.path.join(RESULTS_FOLDER, name+".bst"))
+    upload_blob(BUCKET_NAME, os.path.join(RESULTS_FOLDER, name+".score"), os.path.join(RESULTS_FOLDER, name+".score"))
 
 
 if __name__ == "__main__":
