@@ -284,7 +284,7 @@ class PredictiveModel(object):
 
         import sys
         sys.path.append("../../")
-        from rounder import OptimizedRounder
+        from gcp_training.rounder import OptimizedRounder
         rounder = OptimizedRounder()
         rounder.fit(meta_train, Y)
         coefficients = rounder.coefficients()
