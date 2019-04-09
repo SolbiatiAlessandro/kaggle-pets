@@ -4,3 +4,6 @@ venv
 htmlcov
 *.swp
 .coverage*
+*.pkl
+.json
+.bst
