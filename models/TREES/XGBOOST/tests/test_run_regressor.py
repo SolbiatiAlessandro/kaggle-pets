@@ -70,7 +70,6 @@ def test_run():
     model.train(train_X, train_Y, cat_features)
     
     predictions = model.predict(validation_X)
-    import pdb;pdb.set_trace()
     labels_predictions = model.meta_predict(train_X,train_Y,validation_X,cat_features)
     score = model.evaluate(validation_Y)
 
