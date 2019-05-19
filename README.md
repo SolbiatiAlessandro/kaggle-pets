@@ -9,13 +9,13 @@ Team Components:
 Contributors:
 - https://github.com/ferrucc-io, ferrucc-io (dramatically helpful in fixing typos)
 
-Stage1 : (in-competition) We will follow along [Stanford CS231-n](http://cs231n.stanford.edu/) assignments and implement them here on the competition.
-Stage2 : (out-competition) Upsolving of the competition
-
 -------------------
-# STAGE1 COMPETITION : ROADMAP
+# STAGE1 COMPETITION
+ We will follow along [Stanford CS231-n](http://cs231n.stanford.edu/) assignments and implement them here on the competition.
 note: stage1 ended on 09/04/2019
 <b>competition results:</b> we arrived 359th out of 1805, 18% percentile
+
+## ROADMAP
 
 *Models:*
 - [X] KNN:
@@ -54,13 +54,15 @@ note: stage1 ended on 09/04/2019
 - [ ] Images
 
 ---------------
-# STAGE2 UPSOLVING : ROADMAP
+# STAGE2 UPSOLVING
 This stage consist in finishing what we were planning to do during competition, and set up better framework/knoweldge on this known competition instead of jumping in on new competitions.
 
-GOALS (by priority):
+## GOALS (by priority):
 1. set up a consistent GCP framework/pipeline for future competition
 2. explore and implement the recent autoML approaches to Kaggle
 3. get insight on the specific competition
+
+## ROADMAP
 
 *GCP FRAMEWORK/PIPELINE*
 - [X] build a running prototype running on cloud `kaggle-pets/models/TREES/XGBOOST/gcp_training/`
